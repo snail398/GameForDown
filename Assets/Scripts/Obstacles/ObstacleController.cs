@@ -4,6 +4,9 @@ namespace Assets.Scripts.Obstacles
 {
     public class ObstacleController : MonoBehaviour
     {
+        [SerializeField] protected GameEvent OnHeroDamaged;
+        [SerializeField] protected IntVariable HeroLife;
+
         private float _speed;
         private GameSpeed _speedSource;
         private Root _root;
@@ -36,6 +39,8 @@ namespace Assets.Scripts.Obstacles
         protected void HeroDamage()
         {
             // нанести урон герою
+            HeroLife.Value--;
+            OnHeroDamaged.Raise();
             gameObject.GetComponent<PoolObject>().ReturnToPool();
         }
     }

@@ -39,6 +39,7 @@ namespace Assets.Scripts
                 lineCount = _levelConfig.LineCount,
                 spawnTime = _levelConfig.SpawnTime,
                 obstaclePrefabs = _levelConfig.WallPrefabNames,
+                parent = this.gameObject,
             };
             _obstacleGenerator = new ObstacleGenerator(obsGenCtx);
         }

@@ -17,8 +17,9 @@ namespace Assets.Scripts.Obstacles
             public int lineCount;
             public int spawnTime;
             public List<string> obstaclePrefabs;
+            public GameObject parent;
         }
-        private const int StartPosY = 15;
+        private const int StartPosY = 150;
         private readonly List<int> _possiblePosList;
         private readonly Ctx _ctx;
         private readonly IDisposable _timerHandler;
@@ -27,11 +28,13 @@ namespace Assets.Scripts.Obstacles
         {
             _ctx = ctx;
             _possiblePosList = GetPossiblePositionForObstacle();
-            GenerateObstacle();
             _timerHandler?.Dispose();
-            _timerHandler = Observable.Timer(System.TimeSpan.FromSeconds(_ctx.spawnTime)).Repeat().Subscribe(_ => GenerateObstacle());
+            _timerHandler = Observable
+                .Timer(System.TimeSpan.FromSeconds(_ctx.spawnTime))
+                .Repeat()
+                .Subscribe(_ => GenerateObstacle()).AddTo(_ctx.parent);
         }
-
+        
         public void GenerateObstacle()
         {
             List<int> posList = GetPositionsForObstacles();

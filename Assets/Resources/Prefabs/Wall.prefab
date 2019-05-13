@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80771a25ffc879048bfbdfb540a2a4d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnHeroDamaged: {fileID: 11400000, guid: a1461dd69b6f54740a578647b0aa29da, type: 2}
+  HeroLife: {fileID: 11400000, guid: 422134338b7923349a099ecc579cdf95, type: 2}
 --- !u!114 &3599038042723428775
 MonoBehaviour:
   m_ObjectHideFlags: 0
