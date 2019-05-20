@@ -18,16 +18,15 @@ namespace Assets.Scripts.Obstacles
             public int spawnTime;
             public List<string> obstaclePrefabs;
             public GameObject parent;
+            public ObstaclePositionFinder positionFinder;
         }
         private const int StartPosY = 150;
-        private readonly List<int> _possiblePosList;
         private readonly Ctx _ctx;
         private readonly IDisposable _timerHandler;
 
         public ObstacleGenerator(Ctx ctx)
         {
             _ctx = ctx;
-            _possiblePosList = GetPossiblePositionForObstacle();
             _timerHandler?.Dispose();
             _timerHandler = Observable
                 .Timer(System.TimeSpan.FromSeconds(_ctx.spawnTime))
@@ -37,7 +36,7 @@ namespace Assets.Scripts.Obstacles
         
         public void GenerateObstacle()
         {
-            List<int> posList = GetPositionsForObstacles();
+            List<int> posList = _ctx.positionFinder.GetPositionsForObstacles();
             foreach (var pos in posList)
             {
                 PoolManager.GetObject("Wall", new Vector3(pos, StartPosY, 0), Quaternion.identity);
@@ -45,40 +44,9 @@ namespace Assets.Scripts.Obstacles
 
             if (posList.Count.Equals(_ctx.lineCount - 1))
             {
-                List<int> uniqWallPos = _possiblePosList.Except(posList).ToList();
+                List<int> uniqWallPos = _ctx.positionFinder.PossiblePosList.Except(posList).ToList();
                 PoolManager.GetObject(_ctx.obstaclePrefabs[Random.Range(0, _ctx.obstaclePrefabs.Count)], new Vector3(uniqWallPos[0], StartPosY, 0), Quaternion.identity);
             }
-        }
-
-        public List<int> GetPositionsForObstacles()
-        {
-            List<int> posList = new List<int>();
-            for (int i = 0; i < _ctx.lineCount - 1; i++)
-            {
-                var alreadyHas = false;
-                int tryPos = _possiblePosList[Random.Range(0, _possiblePosList.Count)];
-;               foreach (var pos in posList)
-                {
-                    if (!pos.Equals(tryPos)) continue;
-                    alreadyHas = true;
-                    break;
-                }
-                if (!alreadyHas) posList.Add(tryPos);
-            }
-
-            return posList;
-        }
-
-        public List<int> GetPossiblePositionForObstacle()
-        {
-            List<int> posList = new List<int>();
-            int temp = -_ctx.lineCount;
-            while (temp < _ctx.lineCount)
-            {
-                posList.Add(temp+1);
-                temp += 2;
-            }
-            return posList;
         }
     }
 }

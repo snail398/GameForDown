@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 
 namespace Assets.Scripts.Pool
 {
@@ -8,6 +9,8 @@ namespace Assets.Scripts.Pool
 
         #region Unity scene settings
         [SerializeField] private PoolManager.PoolPart[] pools;
+
+        public ReactiveCommand onPoolReady = new ReactiveCommand();
         #endregion
 
         #region Methods
@@ -27,6 +30,7 @@ namespace Assets.Scripts.Pool
         void Initialize()
         {
             PoolManager.Initialize(pools);
+            onPoolReady?.Execute();
         }
         #endregion
     }

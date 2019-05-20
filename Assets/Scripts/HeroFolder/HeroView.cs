@@ -6,6 +6,7 @@ namespace Assets.Scripts.HeroFolder
 {
     public class HeroView : MonoBehaviour
     {
+        [SerializeField] private float moveSmooth;
         public struct Ctx
         {
             public int strafe;
@@ -22,6 +23,7 @@ namespace Assets.Scripts.HeroFolder
         private MeshCollider _collider;
         private int _colorVar;
         private int _meshVar;
+        private Vector3 _newPos;
 
         void Awake()
         {
@@ -30,14 +32,21 @@ namespace Assets.Scripts.HeroFolder
             _collider = GetComponent<MeshCollider>();
             enabled = false;
         }
+
+        void Update()
+        {
+            if (!transform.position.Equals(_newPos))
+                transform.position = Vector2.Lerp(transform.position,_newPos,moveSmooth);
+            if (Mathf.Abs((transform.position - _newPos).magnitude) < 0.01) transform.position = _newPos;
+        }
         public void MoveLeft()
         {
-            if (CanMoveLeft()) transform.position = new Vector2(transform.position.x - _ctx.strafe, transform.position.y);
+            if (CanMoveLeft()) _newPos = new Vector2(_newPos.x - _ctx.strafe, transform.position.y);
         }
 
         public void MoveRight()
         {
-            if (CanMoveRight()) transform.position = new Vector2(transform.position.x + _ctx.strafe, transform.position.y);
+            if (CanMoveRight()) _newPos = new Vector2(_newPos.x + _ctx.strafe, transform.position.y);
         }
 
         public void ChangeColor()
@@ -56,11 +65,11 @@ namespace Assets.Scripts.HeroFolder
         }
         private bool CanMoveLeft()
         {
-            return !(transform.position.x <= _ctx.lastLeftCoord);
+            return !(_newPos.x <= _ctx.lastLeftCoord);
         }
         private bool CanMoveRight()
         {
-            return !(transform.position.x >= _ctx.lastRightCoord);
+            return !(_newPos.x >= _ctx.lastRightCoord);
         }
         
         public void SetCtx(Ctx ctx)

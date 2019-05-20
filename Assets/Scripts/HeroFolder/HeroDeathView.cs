@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HeroDeathView : MonoBehaviour
+namespace Assets.Scripts.HeroFolder
 {
-    public void RestartScene()
+    public class HeroDeathView : MonoBehaviour
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        public void RestartScene()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

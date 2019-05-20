@@ -5,14 +5,31 @@ namespace Assets.Scripts.Camera
     public class CameraController : MonoBehaviour
     {
         [SerializeField] private LevelConfig _levelConfig;
+        [SerializeField] private Transform _target;
+        [SerializeField] private Transform _cameraRig;
+
+        private Transform _heroPosition;
+        private Vector3 _offsetFromHero;
         void Awake()
         {
-            SetCameraOrthographic();
+            _offsetFromHero = transform.position - Vector3.zero;  // hero spawned at zero position
         }
 
-        private void SetCameraOrthographic()
+        public void SetHero(Transform heroTransform)
         {
-            UnityEngine.Camera.main.orthographicSize = ((float)_levelConfig.LineCount) * Screen.height / Screen.width;
+            _heroPosition = heroTransform;
+        }
+
+        private void SetCameraPosition()
+        {
+            transform.position = _heroPosition.position + _offsetFromHero;
+            transform.LookAt(_target, Vector3.back);
+        }
+
+        void Update()
+        {
+            if (_heroPosition != null)
+                SetCameraPosition();
         }
     }
 }

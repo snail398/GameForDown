@@ -15,9 +15,9 @@ namespace Assets.Scripts.HeroFolder
             public HeroView view;
             public List<Color> availableColors;
             public List<Mesh> availableMeshes;
+            public int lineWidth;
         }
 
-        private const int Strafe = 2;
         private readonly Ctx _ctx;
 
         public Hero(Ctx ctx)
@@ -31,7 +31,7 @@ namespace Assets.Scripts.HeroFolder
             HeroView.Ctx heroViewCtx = new HeroView.Ctx
             {
                 lineCount = _ctx.lineCount,
-                strafe = Strafe,
+                strafe = ctx.lineWidth,
                 lastLeftCoord = -GetLastValue(),
                 lastRightCoord = GetLastValue(),
                 availableColors = _ctx.availableColors,

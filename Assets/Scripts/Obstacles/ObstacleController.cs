@@ -40,7 +40,7 @@ namespace Assets.Scripts.Obstacles
         {
             // нанести урон герою
             HeroLife.Value--;
-            OnHeroDamaged.Raise();
+            OnHeroDamaged?.Raise();
             gameObject.GetComponent<PoolObject>().ReturnToPool();
         }
     }

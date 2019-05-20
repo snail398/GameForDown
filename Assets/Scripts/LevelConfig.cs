@@ -17,9 +17,9 @@ namespace Assets.Scripts
         [SerializeField] private List<Mesh> _obstacleMeshes;
         [SerializeField] private List<MeshesAccordance> _meshesAccordances;
         [SerializeField] private List<String> _wallPrefabNames;
+        [SerializeField] private int _lineWidth = 2;
 
         public int LineCount { get => _lineCount; set => _lineCount = value; }
-        public float LineWidth { get; set; }
         public int SpawnTime { get => _spawnTime; set => _spawnTime = value; }
         public float SpeedIncreaseTime { get => _speedIncreaseTime; set => _speedIncreaseTime = value; }
         public float SpeedIncreaseCount { get => _speedIncreaseCount; set => _speedIncreaseCount = value; }
@@ -29,10 +29,7 @@ namespace Assets.Scripts
         public List<Mesh> ObstacleMeshes { get => _obstacleMeshes; set => _obstacleMeshes = value; }
         public List<MeshesAccordance> MeshesAccordances { get => _meshesAccordances; set => _meshesAccordances = value; }
         public List<String> WallPrefabNames { get => _wallPrefabNames; set => _wallPrefabNames = value; }
+        public int LineWidth { get => _lineWidth; set => _lineWidth = value; }
 
-        void Awake()
-        {
-            LineWidth = 2;
-        }
     }
 }
