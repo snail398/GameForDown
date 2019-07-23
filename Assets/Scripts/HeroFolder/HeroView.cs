@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Lean.Touch;
 using NUnit.Framework;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Scripts.HeroFolder
@@ -7,6 +10,7 @@ namespace Assets.Scripts.HeroFolder
     public class HeroView : MonoBehaviour
     {
         [SerializeField] private float moveSmooth;
+        [SerializeField] private List<LeanFingerSwipe> _swipes;
         public struct Ctx
         {
             public int strafe;
@@ -15,6 +19,9 @@ namespace Assets.Scripts.HeroFolder
             public int lineCount;
             public List<Color> availableColors;
             public List<Mesh> availableMeshes;
+            public Action continueGame;
+            public ReactiveProperty<int> blockSwipeCommand;
+            public ReactiveCommand hideTutorialView;
         }
 
         private Ctx _ctx;
@@ -41,12 +48,23 @@ namespace Assets.Scripts.HeroFolder
         }
         public void MoveLeft()
         {
-            if (CanMoveLeft()) _newPos = new Vector2(_newPos.x - _ctx.strafe, transform.position.y);
+            if (CanMoveLeft())
+            {
+                _newPos = new Vector2(_newPos.x - _ctx.strafe, transform.position.y);
+                _ctx.continueGame?.Invoke();
+                _ctx.hideTutorialView?.Execute();
+
+            }
         }
 
         public void MoveRight()
         {
-            if (CanMoveRight()) _newPos = new Vector2(_newPos.x + _ctx.strafe, transform.position.y);
+            if (CanMoveRight())
+            {
+                _newPos = new Vector2(_newPos.x + _ctx.strafe, transform.position.y);
+                _ctx.continueGame?.Invoke();
+                _ctx.hideTutorialView?.Execute();
+            }
         }
 
         public void ChangeColor()
@@ -54,6 +72,8 @@ namespace Assets.Scripts.HeroFolder
             _colorVar++;
             if (_colorVar >= _ctx.availableColors.Count) _colorVar = 0;
             _heroMaterial.color = _ctx.availableColors[_colorVar];
+            _ctx.continueGame?.Invoke();
+            _ctx.hideTutorialView?.Execute();
         }
         
         public void ChangeShape()
@@ -62,6 +82,8 @@ namespace Assets.Scripts.HeroFolder
             if (_meshVar >= _ctx.availableMeshes.Count) _meshVar = 0;
             _filter.sharedMesh = _ctx.availableMeshes[_meshVar];
             _collider.sharedMesh = _ctx.availableMeshes[_meshVar];
+            _ctx.continueGame?.Invoke();
+            _ctx.hideTutorialView?.Execute();
         }
         private bool CanMoveLeft()
         {
@@ -87,6 +109,35 @@ namespace Assets.Scripts.HeroFolder
             _filter.sharedMesh = _ctx.availableMeshes[_meshVar];
             _collider.sharedMesh = _ctx.availableMeshes[_meshVar];
             enabled = true;
+            _ctx.blockSwipeCommand.Subscribe(ControlSwipesEnable).AddTo(this);
+        }
+
+        //0 - все доступны, -1 - никто, 1 - верх, 2-право,3 - вниз , 4 - влево
+        public void ControlSwipesEnable(int command)
+        {
+            foreach (LeanFingerSwipe swipe in _swipes)
+            {
+                swipe.enabled = false;
+            }
+            switch (command)
+            {
+                case 0:
+                    foreach (LeanFingerSwipe swipe in _swipes)
+                    {
+                        swipe.enabled = true;
+                    }
+                    break;
+                case -1:
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    _swipes[command - 1].enabled = true;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

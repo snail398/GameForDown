@@ -36,5 +36,10 @@ namespace Assets.Scripts.Obstacles
         {
             _filter.sharedMesh = _configSource.ObstacleMeshes[Random.Range(0, _configSource.ObstacleMeshes.Count)];
         }
+
+        public void SetMesh(int i)
+        {
+            _filter.sharedMesh = _configSource.ObstacleMeshes[i];
+        }
     }
 }

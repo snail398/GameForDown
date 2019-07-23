@@ -20,16 +20,14 @@ namespace Assets.Scripts.Obstacles
             public GameObject parent;
             public ObstaclePositionFinder positionFinder;
         }
+
         private const int StartPosY = 150;
         private readonly Ctx _ctx;
-        private readonly IDisposable _timerHandler;
 
         public ObstacleGenerator(Ctx ctx)
         {
             _ctx = ctx;
-            _timerHandler?.Dispose();
-            _timerHandler = Observable
-                .Timer(System.TimeSpan.FromSeconds(_ctx.spawnTime))
+            Observable.Timer(System.TimeSpan.FromSeconds(_ctx.spawnTime))
                 .Repeat()
                 .Subscribe(_ => GenerateObstacle()).AddTo(_ctx.parent);
         }

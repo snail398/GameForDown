@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace Assets.Scripts.HeroFolder
@@ -16,6 +17,9 @@ namespace Assets.Scripts.HeroFolder
             public List<Color> availableColors;
             public List<Mesh> availableMeshes;
             public int lineWidth;
+            public Action continueGame;
+            public ReactiveProperty<int> blockSwipeCommand;
+            public ReactiveCommand hideTutorialView;
         }
 
         private readonly Ctx _ctx;
@@ -36,6 +40,9 @@ namespace Assets.Scripts.HeroFolder
                 lastRightCoord = GetLastValue(),
                 availableColors = _ctx.availableColors,
                 availableMeshes = _ctx.availableMeshes,
+                continueGame = _ctx.continueGame,
+                blockSwipeCommand = _ctx.blockSwipeCommand,
+                hideTutorialView = _ctx.hideTutorialView,
             };
             _ctx.view.SetCtx(heroViewCtx);
         }

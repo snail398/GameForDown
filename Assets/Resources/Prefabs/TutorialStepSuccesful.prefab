@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6011504299635823276}
   - component: {fileID: 6684182586544230395}
   - component: {fileID: 2229371349343000011}
+  - component: {fileID: -2114141554096966753}
   m_Layer: 0
   m_Name: TutorialStepSuccesful
   m_TagString: Untagged
@@ -87,3 +88,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-2114141554096966753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6011504299635823315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff4e0c9249adab4cb48d9359bde5097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

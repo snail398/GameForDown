@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,15 @@ namespace Assets.Scripts.Tutorial
 
         private float time;
         private bool horizontal;
+        private IDisposable _timerDisposable;
+        private IDisposable _arrowDisposable;
 
         public void ShowArrow(string direction)
         {
+            _arrowDisposable?.Dispose();
+            _arrowDisposable = Observable.Timer(System.TimeSpan.FromSeconds(3))
+                .Subscribe(_ => HideArrow()).AddTo(this);
+            arrow.enabled = true;
             float zAngle = 0;
             switch (direction)
             {
@@ -48,8 +55,8 @@ namespace Assets.Scripts.Tutorial
         {
             text.enabled = true;
             text.text = message;
-            Observable
-                .Timer(System.TimeSpan.FromSeconds(3))
+            _timerDisposable?.Dispose();
+            _timerDisposable = Observable.Timer(System.TimeSpan.FromSeconds(3))
                 .Subscribe(_ => HideText()).AddTo(this);
         }
 

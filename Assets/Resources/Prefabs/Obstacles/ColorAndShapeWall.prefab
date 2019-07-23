@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1938279428423466106}
   - component: {fileID: 1938279428423466107}
   - component: {fileID: 1938279428423466104}
+  - component: {fileID: 1602865701807313004}
   m_Layer: 0
   m_Name: ColorAndShapeWall
   m_TagString: Obstacle
@@ -134,5 +135,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: efd7089be44090c40ac79108b3035992, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1602865701807313004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938279428423466105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff4e0c9249adab4cb48d9359bde5097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

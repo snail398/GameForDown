@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3599038042723428775}
   - component: {fileID: 6632402947687186034}
   - component: {fileID: 5865347109002774451}
+  - component: {fileID: 9154837150925486156}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Obstacle
@@ -136,3 +137,15 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.995, y: 0.452, z: 2.654}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &9154837150925486156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9091786190412857511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ff4e0c9249adab4cb48d9359bde5097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

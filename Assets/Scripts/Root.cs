@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Camera;
+﻿using System;
+using Assets.Scripts.Camera;
+using Assets.Scripts.Coins;
 using Assets.Scripts.HeroFolder;
 using Assets.Scripts.Obstacles;
 using Assets.Scripts.Pool;
@@ -16,6 +18,7 @@ namespace Assets.Scripts
         [SerializeField] private HeroView _heroPrefab;
         [SerializeField] private TutorialView _tutorialPrefab;
         [SerializeField] private StepSuccesful stepSuccesful;
+        [SerializeField] private SlowDowner slowDowner;
         [SerializeField] private IntVariable score;
         [SerializeField] private IntVariable maxScore;
         [SerializeField] private CameraController cameraController;
@@ -25,12 +28,17 @@ namespace Assets.Scripts
         private Hero _mainHero;
         private float _tempTime;
         private ObstacleGenerator _obstacleGenerator;
+        private CoinGenerator _coinGenerator;
         private ObstaclePositionFinder _positionFinder;
         private ScoreContainer _scoreContainer;
         private TutorialController _tutorial;
+        private ReactiveProperty<int> _blockSwipeCommand;
+        private ReactiveCommand _hideTutorialView;
 
         void Awake()
         {
+            _blockSwipeCommand = new ReactiveProperty<int>().AddTo(this);
+            _hideTutorialView = new ReactiveCommand().AddTo(this);
             CreateHero();
             CreatePositionFinder();
             CreateGameSpeedController();
@@ -43,8 +51,13 @@ namespace Assets.Scripts
             if (CheckTutorial())
                 CreateTutorial();
             else
+            {
                 CreateObstacleGenerator();
+                CreateCoinGenerator();
+            }
         }
+
+
         private void CreatePositionFinder()
         {
             ObstaclePositionFinder.Ctx positionFinderCtx = new ObstaclePositionFinder.Ctx
@@ -59,12 +72,19 @@ namespace Assets.Scripts
         {
             TutorialController.Ctx tutorialCtx = new TutorialController.Ctx
             {
-                onTutorialFinished = CreateObstacleGenerator,
+                onTutorialFinished = () =>
+                {
+                    CreateObstacleGenerator();
+                    CreateCoinGenerator();
+                },
                 view =  Instantiate(_tutorialPrefab,Vector3.zero,Quaternion.identity),
                 positionFinder =  _positionFinder,
                 stepSuccesful = stepSuccesful,
                 onTutorialFinish = onTutorialFinish,
                 onTutorialStart = onTutorialStart,
+                SlowDowner = slowDowner,
+                blockSwipeCommand = _blockSwipeCommand,
+                hideTutorialView = _hideTutorialView,
             };
            _tutorial = new TutorialController(tutorialCtx);
         }
@@ -108,6 +128,18 @@ namespace Assets.Scripts
             _obstacleGenerator = new ObstacleGenerator(obsGenCtx);
         }
 
+        private void CreateCoinGenerator()
+        {
+            CoinGenerator.Ctx coinCtx = new CoinGenerator.Ctx
+            {
+                lineCount = _levelConfig.LineCount,
+                spawnTime = _levelConfig.SpawnTime,
+                parent = this.gameObject,
+                positionFinder = _positionFinder,
+            };
+            _coinGenerator = new CoinGenerator(coinCtx);
+        }
+
         private void CreateHero()
         {
             HeroView view = Instantiate(_heroPrefab, Vector2.zero, Quaternion.identity);
@@ -120,6 +152,9 @@ namespace Assets.Scripts
                 availableColors = _levelConfig.AvailableColors,
                 availableMeshes = _levelConfig.AvailableMeshes,
                 lineWidth = _levelConfig.LineWidth,
+                continueGame = _gameSpeed.ContinueGame,
+                blockSwipeCommand = _blockSwipeCommand,
+                hideTutorialView = _hideTutorialView,
             };
             _mainHero = new Hero(heroCtx);
             ConfigCamera(view.transform);
@@ -137,7 +172,8 @@ namespace Assets.Scripts
 
         private bool CheckTutorial()
         {
-            return true;
+            //   return true;
+            return PlayerPrefs.GetInt("tutorial_passed").Equals(0);
         }
 
         public void GameRefresh()

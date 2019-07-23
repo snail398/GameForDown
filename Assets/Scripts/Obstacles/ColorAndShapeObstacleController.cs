@@ -47,5 +47,14 @@ namespace Assets.Scripts.Obstacles
         {
             _material.color = _configSource.AvailableColors[Random.Range(0, _configSource.AvailableColors.Count)];
         }
+        public void SetMesh(int i)
+        {
+            _filter.sharedMesh = _configSource.ObstacleMeshes[i];
+        }
+        public void SetColor(int i)
+        {
+            _material.color = _configSource.AvailableColors[i];
+        }
+
     }
 }
