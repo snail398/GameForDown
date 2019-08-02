@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "418742111437",
+    "firebase_url": "https://game-for-down.firebaseio.com",
+    "project_id": "game-for-down",
+    "storage_bucket": "game-for-down.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418742111437:android:56beafdd265301e2",
+        "android_client_info": {
+          "package_name": "com.GreenStreetGaming.GameForDown"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418742111437-ctfp6q7n0nfko20nbsfefhp339j3pcat.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALTGj5uRw8XJphbvrp5sqnhE6dOnK6zdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418742111437-ctfp6q7n0nfko20nbsfefhp339j3pcat.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
