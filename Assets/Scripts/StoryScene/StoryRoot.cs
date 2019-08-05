@@ -16,6 +16,7 @@ namespace Story
         private readonly Ctx _ctx;
         private readonly StoryRootView _rootView;
         private TwineStory _twineStory;
+        private StoryHUD _storyHUD;
 
         public StoryRoot(Ctx ctx)
         {
@@ -33,6 +34,7 @@ namespace Story
                 introView = _rootView.IntroView,
                 playersData = _ctx.playersData,
                 startStory = _twineStory.StartStory,
+                turnOnPC = _storyHUD.TurnOnPC,
             };
             new Intro(introCtx);
         }
@@ -56,7 +58,7 @@ namespace Story
                 loadRunScene = _ctx.loadRunScene,
                 reloadGame = _ctx.reloadGame,
             };
-            new StoryHUD(hudCtx);
+            _storyHUD = new StoryHUD(hudCtx);
         }
     }
 }

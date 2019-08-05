@@ -13,7 +13,7 @@ namespace Assets.Scripts.Obstacles
 
         public virtual void Awake()
         {
-            _configSource = GameObject.Find("Root").GetComponent<Root>().GetComponent<LevelConfig>();
+            _configSource = GameObject.Find("Root").GetComponent<RootView>().GetComponent<LevelConfig>();
         }
         
         void OnTriggerEnter(Collider col)

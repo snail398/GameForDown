@@ -27,5 +27,10 @@ namespace Story
             };
             _ctx.storyHUDView.SetCtx(viewCtx);
         }
+
+        public void TurnOnPC()
+        {
+            _ctx.storyHUDView.TurnOnPc();
+        }
     }
 }

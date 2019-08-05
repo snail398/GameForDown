@@ -10,6 +10,7 @@ namespace Story
             public IntroView introView;
             public PlayersData playersData;
             public Action startStory;
+            public Action turnOnPC;
         }
 
         private Ctx _ctx;
@@ -30,6 +31,7 @@ namespace Story
             {
                 setIntroWatched = _ctx.playersData.SetGameAlreadyStarted,
                 startStory = _ctx.startStory,
+                turnOnPC = _ctx.turnOnPC,
             };
             _ctx.introView.SetCtx(viewCtx);
         }

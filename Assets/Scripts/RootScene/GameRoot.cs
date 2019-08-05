@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Story;
 using UniRx;
+using Assets.Scripts;
 
 public class GameRoot : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class GameRoot : MonoBehaviour
         SceneLoader.Ctx loaderCtx = new SceneLoader.Ctx
         {
             onStorySceneLoaded = OnSceneLoaded,
+            onRunSceneLoaded = OnRunSceneLoaded,
         };
         _sceneLoader = new SceneLoader(loaderCtx);
         //Load Story Scene
@@ -38,4 +40,15 @@ public class GameRoot : MonoBehaviour
         };
         new StoryRoot(storyCtx);
     }
+
+    private void OnRunSceneLoaded()
+    {
+        Root.Ctx runnerRootCtx = new Root.Ctx
+        {
+            
+        };
+        Root runnerRoot = new Root(runnerRootCtx);
+        runnerRoot.InitializeRunnerRoot();
+    }
+
 }

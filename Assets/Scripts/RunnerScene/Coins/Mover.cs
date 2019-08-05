@@ -9,7 +9,7 @@ namespace Assets.Scripts.Coins
 
         void Awake()
         {
-            _speedSource = GameObject.Find("Root").GetComponent<Root>().GetComponent<GameSpeed>();
+            _speedSource = GameObject.Find("Root").GetComponent<RootView>().GetComponent<GameSpeed>();
         }
 
         void Update()

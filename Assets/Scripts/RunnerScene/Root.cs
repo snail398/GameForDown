@@ -11,19 +11,14 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class Root : MonoBehaviour
+    public class Root
     {
-        [SerializeField] private LevelConfig _levelConfig;
-        [SerializeField] private GameSpeed _gameSpeed;
-        [SerializeField] private HeroView _heroPrefab;
-        [SerializeField] private TutorialView _tutorialPrefab;
-        [SerializeField] private StepSuccesful stepSuccesful;
-        [SerializeField] private SlowDowner slowDowner;
-        [SerializeField] private IntVariable score;
-        [SerializeField] private IntVariable maxScore;
-        [SerializeField] private CameraController cameraController;
-        [SerializeField] private GameEvent onTutorialStart;
-        [SerializeField] private GameEvent onTutorialFinish;
+        public struct Ctx
+        {
+
+        }
+        private RootView _rootView;
+        private Ctx _ctx;
 
         private Hero _mainHero;
         private float _tempTime;
@@ -35,15 +30,22 @@ namespace Assets.Scripts
         private ReactiveProperty<int> _blockSwipeCommand;
         private ReactiveCommand _hideTutorialView;
 
-        void Awake()
+        public Root(Ctx ctx)
         {
-            _blockSwipeCommand = new ReactiveProperty<int>().AddTo(this);
-            _hideTutorialView = new ReactiveCommand().AddTo(this);
+            _ctx = ctx;
+        }
+
+        public void InitializeRunnerRoot()
+        {
+            _rootView = GameObject.Find("Root").GetComponent<RootView>();
+            _blockSwipeCommand = new ReactiveProperty<int>().AddTo(_rootView);
+            _hideTutorialView = new ReactiveCommand().AddTo(_rootView);
             CreateHero();
             CreatePositionFinder();
             CreateGameSpeedController();
             CreateScoreContainer();
-            GetComponent<PoolSetup>().onPoolReady.Subscribe(_ => OnPoolReady()).AddTo(this);
+            // _rootView.GetComponent<PoolSetup>().onPoolReady.Subscribe(_ => OnPoolReady()).AddTo(_rootView);
+            OnPoolReady();
         }
 
         public void OnPoolReady()
@@ -57,13 +59,12 @@ namespace Assets.Scripts
             }
         }
 
-
         private void CreatePositionFinder()
         {
             ObstaclePositionFinder.Ctx positionFinderCtx = new ObstaclePositionFinder.Ctx
             {
-                lineCount = _levelConfig.LineCount,
-                lineWidth = _levelConfig.LineWidth,
+                lineCount = _rootView.LevelConfig.LineCount,
+                lineWidth = _rootView.LevelConfig.LineWidth,
             };
             _positionFinder = new ObstaclePositionFinder(positionFinderCtx);
         }
@@ -77,29 +78,25 @@ namespace Assets.Scripts
                     CreateObstacleGenerator();
                     CreateCoinGenerator();
                 },
-                view =  Instantiate(_tutorialPrefab,Vector3.zero,Quaternion.identity),
+                view = UnityEngine.Object.Instantiate(_rootView.TutorialPrefab, Vector3.zero,Quaternion.identity),
                 positionFinder =  _positionFinder,
-                stepSuccesful = stepSuccesful,
-                onTutorialFinish = onTutorialFinish,
-                onTutorialStart = onTutorialStart,
-                SlowDowner = slowDowner,
+                stepSuccesful = _rootView.StepSuccesful,
+                onTutorialFinish = _rootView.OnTutorialFinish,
+                onTutorialStart = _rootView.OnTutorialStart,
+                SlowDowner = _rootView.SlowDowner,
                 blockSwipeCommand = _blockSwipeCommand,
                 hideTutorialView = _hideTutorialView,
             };
            _tutorial = new TutorialController(tutorialCtx);
         }
-
-        void Update()
-        {
-            _scoreContainer.Tick(Time.deltaTime);
-        }
-
+        
         private void CreateScoreContainer()
         {
             ScoreContainer.Ctx scoreCtx = new ScoreContainer.Ctx
             {
-                score = score,
-                maxScore = maxScore,
+                score = _rootView.Score,
+                maxScore = _rootView.MaxScore,
+                parent = _rootView.gameObject,
             };
             _scoreContainer = new ScoreContainer(scoreCtx);
         }
@@ -108,21 +105,21 @@ namespace Assets.Scripts
         {
             GameSpeed.Ctx gameSpeedCtx = new GameSpeed.Ctx
             {
-                speedIncreaseTime = _levelConfig.SpeedIncreaseTime,
-                startGameSpeed = _levelConfig.StartGameSpeed,
-                speedIncreaseCount = _levelConfig.SpeedIncreaseCount,
+                speedIncreaseTime = _rootView.LevelConfig.SpeedIncreaseTime,
+                startGameSpeed = _rootView.LevelConfig.StartGameSpeed,
+                speedIncreaseCount = _rootView.LevelConfig.SpeedIncreaseCount,
             };
-            _gameSpeed.Initialize(gameSpeedCtx);
+            _rootView.GameSpeed.Initialize(gameSpeedCtx);
         }
 
         private void CreateObstacleGenerator()
         {
             ObstacleGenerator.Ctx obsGenCtx = new ObstacleGenerator.Ctx
             {
-                lineCount = _levelConfig.LineCount,
-                spawnTime = _levelConfig.SpawnTime,
-                obstaclePrefabs = _levelConfig.WallPrefabNames,
-                parent = this.gameObject,
+                lineCount = _rootView.LevelConfig.LineCount,
+                spawnTime = _rootView.LevelConfig.SpawnTime,
+                obstaclePrefabs = _rootView.LevelConfig.WallPrefabNames,
+                parent = _rootView.gameObject,
                 positionFinder = _positionFinder,
             };
             _obstacleGenerator = new ObstacleGenerator(obsGenCtx);
@@ -132,9 +129,9 @@ namespace Assets.Scripts
         {
             CoinGenerator.Ctx coinCtx = new CoinGenerator.Ctx
             {
-                lineCount = _levelConfig.LineCount,
-                spawnTime = _levelConfig.SpawnTime,
-                parent = this.gameObject,
+                lineCount = _rootView.LevelConfig.LineCount,
+                spawnTime = _rootView.LevelConfig.SpawnTime,
+                parent = _rootView.gameObject,
                 positionFinder = _positionFinder,
             };
             _coinGenerator = new CoinGenerator(coinCtx);
@@ -142,17 +139,17 @@ namespace Assets.Scripts
 
         private void CreateHero()
         {
-            HeroView view = Instantiate(_heroPrefab, Vector2.zero, Quaternion.identity);
+            HeroView view = UnityEngine.Object.Instantiate(_rootView.HeroPrefab, Vector2.zero, Quaternion.identity);
             Hero.Ctx heroCtx = new Hero.Ctx
             {
-                lineCount = _levelConfig.LineCount,
+                lineCount = _rootView.LevelConfig.LineCount,
                 maxHeath = 3,
                 currentHealth = 3,
                 view =view,
-                availableColors = _levelConfig.AvailableColors,
-                availableMeshes = _levelConfig.AvailableMeshes,
-                lineWidth = _levelConfig.LineWidth,
-                continueGame = _gameSpeed.ContinueGame,
+                availableColors = _rootView.LevelConfig.AvailableColors,
+                availableMeshes = _rootView.LevelConfig.AvailableMeshes,
+                lineWidth = _rootView.LevelConfig.LineWidth,
+                continueGame = _rootView.GameSpeed.ContinueGame,
                 blockSwipeCommand = _blockSwipeCommand,
                 hideTutorialView = _hideTutorialView,
             };
@@ -167,7 +164,7 @@ namespace Assets.Scripts
 
         private void ConfigCamera(Transform hero)
         {
-            cameraController.SetHero(hero);
+            _rootView.CameraController.SetHero(hero);
         }
 
         private bool CheckTutorial()
@@ -178,7 +175,7 @@ namespace Assets.Scripts
 
         public void GameRefresh()
         {
-            score.Value = 0;
+            _rootView.Score.Value = 0;
         }
     }
 }

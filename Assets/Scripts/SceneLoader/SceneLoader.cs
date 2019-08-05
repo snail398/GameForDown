@@ -1,13 +1,13 @@
 ﻿using UnityEngine.SceneManagement;
 using System;
 using UnityEngine;
-using UniRx;
 
 public class SceneLoader
 {
     public struct Ctx
     {
         public Action onStorySceneLoaded;
+        public Action onRunSceneLoaded;
     }
 
     private Ctx _ctx;
@@ -34,6 +34,12 @@ public class SceneLoader
 
     public void LoadRunScene()
     {
-        SceneManager.LoadSceneAsync(2);
+        AsyncOperation asyncSceneLoad = SceneManager.LoadSceneAsync(2);
+        asyncSceneLoad.completed += OnRunSceneLoaded;
+    }
+
+    private void OnRunSceneLoaded(AsyncOperation op)
+    {
+        _ctx.onRunSceneLoaded?.Invoke();
     }
 }

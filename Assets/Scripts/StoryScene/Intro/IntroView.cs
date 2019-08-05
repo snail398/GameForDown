@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 namespace Story
 {
@@ -11,6 +12,7 @@ namespace Story
         {
             public Action setIntroWatched;
             public Action startStory;
+            public Action turnOnPC;
         }
 
         [SerializeField] private Text introText;
@@ -61,7 +63,8 @@ namespace Story
                 _introScreen.color = new Color(_introScreen.color.r, _introScreen.color.g, _introScreen.color.b, nextAlpha);
                 yield return null;
             }
-            _ctx.startStory?.Invoke();
+            _ctx.turnOnPC?.Invoke();
+            Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe(_ =>_ctx.startStory?.Invoke()).AddTo(this);
             gameObject.SetActive(false);
         }
     }

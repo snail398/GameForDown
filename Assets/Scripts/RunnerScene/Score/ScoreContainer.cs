@@ -1,4 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
+using UniRx;
 
 namespace Assets.Scripts.Score
 {
@@ -8,6 +9,7 @@ namespace Assets.Scripts.Score
         {
             public IntVariable score;
             public IntVariable maxScore;
+            public GameObject parent;
         }
 
         private readonly Ctx _ctx;
@@ -16,9 +18,12 @@ namespace Assets.Scripts.Score
         {
             _ctx = ctx;
             _ctx.score.Value = 0;
+            Observable.EveryUpdate()
+                .Subscribe(_ => Tick())
+                .AddTo(_ctx.parent);
         }
 
-        internal void Tick(float deltaTime)
+        internal void Tick()
         {
             _ctx.score.Value++;
         }

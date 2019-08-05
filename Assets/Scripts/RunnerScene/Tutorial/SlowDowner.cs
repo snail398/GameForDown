@@ -9,7 +9,7 @@ namespace Assets.Scripts.Tutorial
         private bool needSlowDown = true;
         void Awake()
         {
-            _gameSpeed = GameObject.Find("Root").GetComponent<Root>().GetComponent<GameSpeed>();
+            _gameSpeed = GameObject.Find("Root").GetComponent<RootView>().GetComponent<GameSpeed>();
         }
         void OnTriggerEnter(Collider col)
         {

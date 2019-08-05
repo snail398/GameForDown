@@ -1803,6 +1803,7 @@ GameObject:
   - component: {fileID: 1876281847}
   - component: {fileID: 1876281849}
   - component: {fileID: 1876281848}
+  - component: {fileID: 1876281850}
   m_Layer: 0
   m_Name: Root
   m_TagString: Untagged
@@ -2090,6 +2091,33 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &1876281850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876281841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93b858cebf0b11c4b855532a938bbe38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelConfig: {fileID: 1876281845}
+  gameSpeed: {fileID: 1876281846}
+  heroPrefab: {fileID: 1750153403782346509, guid: 165b75a3e113766408cafeb775679693,
+    type: 3}
+  tutorialPrefab: {fileID: 6690757861097361751, guid: 200147b08b4dffd49a57bc392e75dad0,
+    type: 3}
+  stepSuccesful: {fileID: 6011504299635823277, guid: c89e848c6e6959b40995f7848a6f6ac7,
+    type: 3}
+  slowDowner: {fileID: 6783828837619557044, guid: 375b512dba0e2404bb2f04368dcb4bb8,
+    type: 3}
+  score: {fileID: 11400000, guid: 4e0fa8cdff6b0424899d69cb5a88cad0, type: 2}
+  maxScore: {fileID: 11400000, guid: bd8fa16b5cc200842a4984282839312e, type: 2}
+  cameraController: {fileID: 284342439}
+  onTutorialStart: {fileID: 11400000, guid: 547942f60b9d90049871a26386441144, type: 2}
+  onTutorialFinish: {fileID: 11400000, guid: 18260bfaf588e9d4eafeec8cd8a9eafd, type: 2}
 --- !u!1001 &1891204578
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace Story
 {
@@ -8,9 +7,6 @@ namespace Story
     {
         [SerializeField] private IntroView introView;
 
-        public IntroView IntroView
-        {
-            get => introView;
-        }
+        public IntroView IntroView => introView;
     }
 }

@@ -18,14 +18,27 @@ namespace Story
         [SerializeField] private Image notEnoughCoinsScreen;
         [SerializeField] private IntVariable playersCoins;
         [SerializeField] private int coinsToRun = 0;
+        [SerializeField] private Image computerScreen;
 
         private Ctx _ctx;
+        private Animator _animator;
+
+
+        private void Awake()
+        {
+            _animator = computerScreen.GetComponent<Animator>();
+        }
 
         public void SetCtx(Ctx ctx)
         {
             _ctx = ctx;
             playersCoins.Value = _ctx.playersData.GetCoinsCount();
             UpdateCoinsCount();
+        }
+
+        public void TurnOnPc()
+        {
+            _animator.SetTrigger("PcTurnOn");
         }
 
         public void StartRun()
