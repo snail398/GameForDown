@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using Story;
+using UniRx;
 
 public class GameRoot : MonoBehaviour
 {
-    AnaliticsCore _analiticsCore;
-    PlayersData _playersData;
+    private AnaliticsCore _analiticsCore;
+    private PlayersData _playersData;
+    private SceneLoader _sceneLoader;
+
     private void Awake()
     {
         //Create SceneLoader object
@@ -12,9 +15,9 @@ public class GameRoot : MonoBehaviour
         {
             onStorySceneLoaded = OnSceneLoaded,
         };
-        SceneLoader sceneLoader = new SceneLoader(loaderCtx);
+        _sceneLoader = new SceneLoader(loaderCtx);
         //Load Story Scene
-        sceneLoader.LoadStoryScene();
+        _sceneLoader.LoadStoryScene();
 
         //Creating Analitics System 
         _analiticsCore = new AnaliticsCore();
@@ -30,6 +33,8 @@ public class GameRoot : MonoBehaviour
         {
             playersData = _playersData,
             analiticsCore = _analiticsCore,
+            reloadGame = _sceneLoader.ReloadGame,
+            loadRunScene = _sceneLoader.LoadRunScene,
         };
         new StoryRoot(storyCtx);
     }

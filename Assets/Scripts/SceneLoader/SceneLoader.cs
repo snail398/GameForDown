@@ -1,6 +1,7 @@
 ﻿using UnityEngine.SceneManagement;
 using System;
 using UnityEngine;
+using UniRx;
 
 public class SceneLoader
 {
@@ -24,5 +25,15 @@ public class SceneLoader
     private void OnSceneLoaded(AsyncOperation op)
     {
         _ctx.onStorySceneLoaded?.Invoke();
+    }
+
+    public void ReloadGame()
+    {
+        SceneManager.LoadSceneAsync(0);
+    }
+
+    public void LoadRunScene()
+    {
+        SceneManager.LoadSceneAsync(2);
     }
 }

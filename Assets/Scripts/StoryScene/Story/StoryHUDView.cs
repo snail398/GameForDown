@@ -1,50 +1,38 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 namespace Story
 {
-    public class StoryHUDController : MonoBehaviour
+    public class StoryHUDView : MonoBehaviour
     {
-        [SerializeField] private Text playersCoinsCountText;
-
-        [SerializeField] private Text storyStepText;
-
-        [SerializeField] private Text firstOptionText;
-        [SerializeField] private Text firstOptionCount;
-
-        [SerializeField] private Text secondOptionText;
-        [SerializeField] private Text secondOptionCount;
-
-        [SerializeField] private Text thirdOptionText;
-        [SerializeField] private Text thirdOptionCount;
-
-        [SerializeField] private Image notEnoughCoinsScreen;
-
-        [SerializeField] private IntVariable playersCoins;
-    
-        [SerializeField] private int coinsToRun = 0;
-        [SerializeField] private int coinsToFirstOption = 10;
-        [SerializeField] private int coinsToSecondOption = 20;
-        [SerializeField] private int coinsToThirdOption = 30;
-
-        private StoryController storyController;
-
-        void Awake()
+        public struct Ctx
         {
-            playersCoins.Value = PlayerPrefs.GetInt("coins_count");
-            storyController = GetComponent<StoryController>();
+            public TwineStory twineStory;
+            public PlayersData playersData;
+            public Action reloadGame;
+            public Action loadRunScene;
+        }
+
+        [SerializeField] private Text playersCoinsCountText;
+        [SerializeField] private Image notEnoughCoinsScreen;
+        [SerializeField] private IntVariable playersCoins;
+        [SerializeField] private int coinsToRun = 0;
+
+        private Ctx _ctx;
+
+        public void SetCtx(Ctx ctx)
+        {
+            _ctx = ctx;
+            playersCoins.Value = _ctx.playersData.GetCoinsCount();
             UpdateCoinsCount();
-            firstOptionCount.text = coinsToFirstOption.ToString();
-            secondOptionCount.text = coinsToSecondOption.ToString();
-            thirdOptionCount.text = coinsToThirdOption.ToString();
         }
 
         public void StartRun()
         {
             if (CheckHasEnoughCoins(coinsToRun))
             {
-                SceneManager.LoadScene(1);
+                _ctx.loadRunScene?.Invoke();
                 RemoveCoins(coinsToRun);
                 SaveGame();
             }
@@ -73,17 +61,17 @@ namespace Story
             UpdateCoinsCount();
         }
 
-        private void UpdateCoinsCount()
+        public void UpdateCoinsCount()
         {
             playersCoinsCountText.text = playersCoins.Value.ToString();
         }
         
         public void ChooseOption(int option)
         {
-            int coinsToOption = storyController.GetCoinsForOption(option);
+            int coinsToOption = _ctx.twineStory.GetCoinsForOption(option);
             if (CheckHasEnoughCoins(coinsToOption))
             {
-                storyController.MakeChoice(option);
+                _ctx.twineStory.MakeChoice(option);
                 RemoveCoins(coinsToOption);
             }
         }
@@ -95,14 +83,14 @@ namespace Story
 
         private void SaveGame()
         {
-            PlayerPrefs.SetInt("coins_count", playersCoins.Value);
+            _ctx.playersData.SetCointCount(playersCoins.Value);
         }
 
         public void RestartGame()
         {
             playersCoins.Value = 0;
-            PlayerPrefs.DeleteAll();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            _ctx.playersData.ClearData();
+            _ctx.reloadGame?.Invoke();
         }
     }
 }

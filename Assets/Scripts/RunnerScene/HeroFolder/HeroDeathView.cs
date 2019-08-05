@@ -30,7 +30,7 @@ namespace Assets.Scripts.HeroFolder
 
         private void SetSceneToStory()
         {
-            SceneManager.LoadScene("Story");
+            SceneManager.LoadScene(0);
         }
 
         public void InTutorial()

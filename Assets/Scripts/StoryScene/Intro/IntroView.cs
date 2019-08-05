@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +9,11 @@ namespace Story
     {
         public struct Ctx
         {
-            public PlayersData playersData;
+            public Action setIntroWatched;
+            public Action startStory;
         }
 
         [SerializeField] private Text introText;
-        [SerializeField] private StoryController storyController;
 
         private Image _introScreen;
         private Ctx _ctx;
@@ -26,12 +27,18 @@ namespace Story
         {
             _ctx = ctx;
         }
+
+        public void StartCoroutinePrinting(string input, float delay)
+        {
+            StartCoroutine(TextPrint( input, delay));
+        }
+
         public void HideIntroScreen()
         {
             StartCoroutine(HideIntroByAlpha());
         }
 
-        public IEnumerator TextPrint(string input, float delay)
+         IEnumerator TextPrint(string input, float delay)
         {
             //вывод текста побуквенно
             for (int i = 0; i <= input.Length; i++)
@@ -41,7 +48,7 @@ namespace Story
             }
 
             Button button = GetComponent<Button>();
-            _ctx.playersData.SetGameAlreadyStarted();
+            _ctx.setIntroWatched?.Invoke();
             button.onClick.AddListener(HideIntroScreen);
         }
 
@@ -54,7 +61,7 @@ namespace Story
                 _introScreen.color = new Color(_introScreen.color.r, _introScreen.color.g, _introScreen.color.b, nextAlpha);
                 yield return null;
             }
-            storyController.StartStory(); 
+            _ctx.startStory?.Invoke();
             gameObject.SetActive(false);
         }
     }
