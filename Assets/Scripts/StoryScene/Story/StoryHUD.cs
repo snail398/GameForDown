@@ -18,6 +18,10 @@ namespace Story
         public StoryHUD(Ctx ctx)
         {
             _ctx = ctx;
+        }
+
+        public void InitializeHUD()
+        {
             StoryHUDView.Ctx viewCtx = new StoryHUDView.Ctx
             {
                 playersData = _ctx.playersData,
@@ -26,6 +30,8 @@ namespace Story
                 reloadGame = _ctx.reloadGame,
             };
             _ctx.storyHUDView.SetCtx(viewCtx);
+            if (!_ctx.playersData.CheckNeedPcLoading())
+                _ctx.storyHUDView.SetPcOn();
         }
 
         public void TurnOnPC()

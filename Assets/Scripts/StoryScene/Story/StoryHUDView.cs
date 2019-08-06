@@ -36,9 +36,20 @@ namespace Story
             UpdateCoinsCount();
         }
 
+        public void SetPcOn()
+        {
+            if (_animator != null)
+                _animator.enabled = false;
+            computerScreen.color = new Color(0.2385f,0.23585f,0.23585f);
+        }
+
         public void TurnOnPc()
         {
-            _animator.SetTrigger("PcTurnOn");
+            if (_animator != null)
+            {
+                _animator.enabled = true;
+                _animator.SetTrigger("PcTurnOn");
+            }
         }
 
         public void StartRun()
@@ -76,7 +87,8 @@ namespace Story
 
         public void UpdateCoinsCount()
         {
-            playersCoinsCountText.text = playersCoins.Value.ToString();
+            if (playersCoinsCountText != null)
+                playersCoinsCountText.text = playersCoins.Value.ToString();
         }
         
         public void ChooseOption(int option)

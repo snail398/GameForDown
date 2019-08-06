@@ -20,6 +20,8 @@ namespace Assets.Scripts.HeroFolder
             public Action continueGame;
             public ReactiveProperty<int> blockSwipeCommand;
             public ReactiveCommand hideTutorialView;
+            public Action restartScene;
+            public Action returnToStoryScene;
         }
 
         private readonly Ctx _ctx;
@@ -27,6 +29,10 @@ namespace Assets.Scripts.HeroFolder
         public Hero(Ctx ctx)
         {
             _ctx = ctx;
+        }
+
+        public void InitializeHero()
+        {
             if (_ctx.currentHealth > _ctx.maxHeath) throw new IndexOutOfRangeException("Current Health cannot be more than Max health");
             if (_ctx.currentHealth < 0 || _ctx.maxHeath < 0) throw new IndexOutOfRangeException(" Health cannot be less than zero");
             this.CurrentHealth = _ctx.currentHealth;
@@ -35,7 +41,7 @@ namespace Assets.Scripts.HeroFolder
             HeroView.Ctx heroViewCtx = new HeroView.Ctx
             {
                 lineCount = _ctx.lineCount,
-                strafe = ctx.lineWidth,
+                strafe = _ctx.lineWidth,
                 lastLeftCoord = -GetLastValue(),
                 lastRightCoord = GetLastValue(),
                 availableColors = _ctx.availableColors,
@@ -45,6 +51,12 @@ namespace Assets.Scripts.HeroFolder
                 hideTutorialView = _ctx.hideTutorialView,
             };
             _ctx.view.SetCtx(heroViewCtx);
+            HeroDeathView.Ctx deathViewCtx = new HeroDeathView.Ctx
+            {
+                restartScene = _ctx.restartScene,
+                returnToStoryScene = _ctx.returnToStoryScene,
+            };
+            _ctx.view.GetComponent<HeroDeathView>().SetCtx(deathViewCtx);
         }
 
         public int CurrentHealth { get; internal set; }

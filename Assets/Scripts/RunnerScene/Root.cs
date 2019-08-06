@@ -1,5 +1,4 @@
 ﻿using System;
-using Assets.Scripts.Camera;
 using Assets.Scripts.Coins;
 using Assets.Scripts.HeroFolder;
 using Assets.Scripts.Obstacles;
@@ -15,13 +14,13 @@ namespace Assets.Scripts
     {
         public struct Ctx
         {
-
+            public Action restartScene;
+            public Action returnToStoryScene;
         }
         private RootView _rootView;
         private Ctx _ctx;
 
         private Hero _mainHero;
-        private float _tempTime;
         private ObstacleGenerator _obstacleGenerator;
         private CoinGenerator _coinGenerator;
         private ObstaclePositionFinder _positionFinder;
@@ -38,6 +37,11 @@ namespace Assets.Scripts
         public void InitializeRunnerRoot()
         {
             _rootView = GameObject.Find("Root").GetComponent<RootView>();
+            RootView.Ctx rootViewCtx = new RootView.Ctx
+            {
+                returnToStory = _ctx.returnToStoryScene,
+            };
+            _rootView.SetCtx(rootViewCtx);
             _blockSwipeCommand = new ReactiveProperty<int>().AddTo(_rootView);
             _hideTutorialView = new ReactiveCommand().AddTo(_rootView);
             CreateHero();
@@ -140,20 +144,26 @@ namespace Assets.Scripts
         private void CreateHero()
         {
             HeroView view = UnityEngine.Object.Instantiate(_rootView.HeroPrefab, Vector2.zero, Quaternion.identity);
-            Hero.Ctx heroCtx = new Hero.Ctx
+            if (_mainHero == null)
             {
-                lineCount = _rootView.LevelConfig.LineCount,
-                maxHeath = 3,
-                currentHealth = 3,
-                view =view,
-                availableColors = _rootView.LevelConfig.AvailableColors,
-                availableMeshes = _rootView.LevelConfig.AvailableMeshes,
-                lineWidth = _rootView.LevelConfig.LineWidth,
-                continueGame = _rootView.GameSpeed.ContinueGame,
-                blockSwipeCommand = _blockSwipeCommand,
-                hideTutorialView = _hideTutorialView,
-            };
-            _mainHero = new Hero(heroCtx);
+                Hero.Ctx heroCtx = new Hero.Ctx
+                {
+                    lineCount = _rootView.LevelConfig.LineCount,
+                    maxHeath = 3,
+                    currentHealth = 3,
+                    view = view,
+                    availableColors = _rootView.LevelConfig.AvailableColors,
+                    availableMeshes = _rootView.LevelConfig.AvailableMeshes,
+                    lineWidth = _rootView.LevelConfig.LineWidth,
+                    continueGame = _rootView.GameSpeed.ContinueGame,
+                    blockSwipeCommand = _blockSwipeCommand,
+                    hideTutorialView = _hideTutorialView,
+                    restartScene = _ctx.restartScene,
+                    returnToStoryScene = _ctx.returnToStoryScene,
+                };
+                _mainHero = new Hero(heroCtx);
+            }
+            _mainHero.InitializeHero();
             ConfigCamera(view.transform);
         }
 

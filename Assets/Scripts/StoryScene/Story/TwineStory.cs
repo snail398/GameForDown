@@ -15,8 +15,8 @@ namespace Story
 
         private readonly Ctx _ctx;
         private readonly List<StoryLink> _storyLinks = new List<StoryLink>();
-        private readonly Cradle.Story _story;
-        private readonly List<Button> _optionsButtons;
+        private Cradle.Story _story;
+        private List<Button> _optionsButtons;
         private readonly List<string> _varNameFromStory = new List<string>()
         {
             "firstOption",
@@ -27,6 +27,10 @@ namespace Story
         public TwineStory(Ctx ctx)
         {
             _ctx = ctx;
+        }
+
+        public void InitializeTwine()
+        {
             _story = _ctx.twineStoryView.CradleStory;
             _optionsButtons = _ctx.twineStoryView.OptionsButtons;
             TwineStoryView.Ctx viewCtx = new TwineStoryView.Ctx

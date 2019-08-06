@@ -3,9 +3,14 @@ using Assets.Scripts.Camera;
 using Assets.Scripts.HeroFolder;
 using Assets.Scripts.Tutorial;
 using UnityEngine;
+using System;
 
 public class RootView : MonoBehaviour
 {
+    public struct Ctx
+    {
+        public Action returnToStory;
+    }
     [SerializeField] private LevelConfig levelConfig;
     [SerializeField] private GameSpeed gameSpeed;
     [SerializeField] private HeroView heroPrefab;
@@ -18,6 +23,13 @@ public class RootView : MonoBehaviour
     [SerializeField] private GameEvent onTutorialStart;
     [SerializeField] private GameEvent onTutorialFinish;
 
+    private Ctx _ctx;
+
+    public void SetCtx(Ctx ctx)
+    {
+        _ctx = ctx;
+    }
+
     public LevelConfig LevelConfig => levelConfig;
     public GameSpeed GameSpeed => gameSpeed;
     public HeroView HeroPrefab => heroPrefab;
@@ -29,4 +41,9 @@ public class RootView : MonoBehaviour
     public CameraController CameraController => cameraController;
     public GameEvent OnTutorialStart => onTutorialStart;
     public GameEvent OnTutorialFinish => onTutorialFinish;
+
+    public void ReturnToStory()
+    {
+        _ctx.returnToStory?.Invoke();
+    }
 }

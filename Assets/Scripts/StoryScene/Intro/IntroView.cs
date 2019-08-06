@@ -13,6 +13,8 @@ namespace Story
             public Action setIntroWatched;
             public Action startStory;
             public Action turnOnPC;
+            public Action SetDontNeedPcLoad;
+            public bool needDelay;
         }
 
         [SerializeField] private Text introText;
@@ -63,8 +65,18 @@ namespace Story
                 _introScreen.color = new Color(_introScreen.color.r, _introScreen.color.g, _introScreen.color.b, nextAlpha);
                 yield return null;
             }
-            _ctx.turnOnPC?.Invoke();
-            Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe(_ =>_ctx.startStory?.Invoke()).AddTo(this);
+            if (_ctx.needDelay)
+            {
+                _ctx.turnOnPC?.Invoke();
+                _ctx.SetDontNeedPcLoad?.Invoke();
+                Observable.Timer(TimeSpan.FromSeconds(4)).Subscribe(_ =>
+                {
+                    _ctx.startStory?.Invoke();
+                }
+                ).AddTo(this);
+            }
+            else
+                _ctx.startStory?.Invoke();
             gameObject.SetActive(false);
         }
     }

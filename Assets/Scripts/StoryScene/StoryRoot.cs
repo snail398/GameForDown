@@ -14,13 +14,18 @@ namespace Story
         }
 
         private readonly Ctx _ctx;
-        private readonly StoryRootView _rootView;
+        private StoryRootView _rootView;
         private TwineStory _twineStory;
         private StoryHUD _storyHUD;
+        private Intro _intro;
 
         public StoryRoot(Ctx ctx)
         {
             _ctx = ctx;
+        }
+
+        public void Initialize()
+        {
             _rootView = GameObject.Find("StoryRoot").GetComponent<StoryRootView>();
             CreateTwineStory();
             CreateHUD();
@@ -29,36 +34,52 @@ namespace Story
 
         private void CreateIntro()
         {
-            Intro.Ctx introCtx = new Intro.Ctx
+            bool needDelay = true;
+            if (!_ctx.playersData.CheckNeedPcLoading())
+                needDelay = false;
+            if (_intro == null)
             {
-                introView = _rootView.IntroView,
-                playersData = _ctx.playersData,
-                startStory = _twineStory.StartStory,
-                turnOnPC = _storyHUD.TurnOnPC,
-            };
-            new Intro(introCtx);
+                Intro.Ctx introCtx = new Intro.Ctx
+                {
+                    introView = _rootView.IntroView,
+                    playersData = _ctx.playersData,
+                    startStory = _twineStory.StartStory,
+                    turnOnPC = _storyHUD.TurnOnPC,
+                    needDelay = needDelay,
+                };
+                _intro = new Intro(introCtx);
+            }
+            _intro.InitializeIntro();
         }
         private void CreateTwineStory()
         {
-            TwineStory.Ctx twineCtx = new TwineStory.Ctx
+            if (_twineStory == null)
             {
-                twineStoryView = _rootView.GetComponent<TwineStoryView>(),
-                playersData = _ctx.playersData,
-            };
-            _twineStory = new TwineStory(twineCtx);
+                TwineStory.Ctx twineCtx = new TwineStory.Ctx
+                {
+                    twineStoryView = _rootView.GetComponent<TwineStoryView>(),
+                    playersData = _ctx.playersData,
+                };
+                _twineStory = new TwineStory(twineCtx);
+            }
+            _twineStory.InitializeTwine();
         }
 
         private void CreateHUD()
         {
-            StoryHUD.Ctx hudCtx = new StoryHUD.Ctx
+            if (_storyHUD == null)
             {
-                playersData = _ctx.playersData,
-                storyHUDView = _rootView.GetComponent<StoryHUDView>(),
-                twineStory = _twineStory,
-                loadRunScene = _ctx.loadRunScene,
-                reloadGame = _ctx.reloadGame,
-            };
-            _storyHUD = new StoryHUD(hudCtx);
+                StoryHUD.Ctx hudCtx = new StoryHUD.Ctx
+                {
+                    playersData = _ctx.playersData,
+                    storyHUDView = _rootView.GetComponent<StoryHUDView>(),
+                    twineStory = _twineStory,
+                    loadRunScene = _ctx.loadRunScene,
+                    reloadGame = _ctx.reloadGame,
+                };
+                _storyHUD = new StoryHUD(hudCtx);
+            }
+            _storyHUD.InitializeHUD();
         }
     }
 }

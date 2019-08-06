@@ -8,6 +8,8 @@ public class GameRoot : MonoBehaviour
     private AnaliticsCore _analiticsCore;
     private PlayersData _playersData;
     private SceneLoader _sceneLoader;
+    private StoryRoot _storyRoot;
+    private Root _runnerRoot;
 
     private void Awake()
     {
@@ -30,25 +32,35 @@ public class GameRoot : MonoBehaviour
 
     private void OnSceneLoaded()
     {
-        //Create StoryRoot object
-        StoryRoot.Ctx storyCtx = new StoryRoot.Ctx()
+        _runnerRoot = null;
+        if (_storyRoot == null)
         {
-            playersData = _playersData,
-            analiticsCore = _analiticsCore,
-            reloadGame = _sceneLoader.ReloadGame,
-            loadRunScene = _sceneLoader.LoadRunScene,
-        };
-        new StoryRoot(storyCtx);
+            //Create StoryRoot object
+            StoryRoot.Ctx storyCtx = new StoryRoot.Ctx()
+            {
+                playersData = _playersData,
+                analiticsCore = _analiticsCore,
+                reloadGame = _sceneLoader.ReloadGame,
+                loadRunScene = _sceneLoader.LoadRunScene,
+            };
+            _storyRoot = new StoryRoot(storyCtx);
+        }
+        _storyRoot.Initialize();
     }
 
     private void OnRunSceneLoaded()
     {
-        Root.Ctx runnerRootCtx = new Root.Ctx
-        {
-            
-        };
-        Root runnerRoot = new Root(runnerRootCtx);
-        runnerRoot.InitializeRunnerRoot();
+        _storyRoot = null;
+        if (_runnerRoot == null)
+        { 
+            Root.Ctx runnerRootCtx = new Root.Ctx
+            {
+                restartScene = _sceneLoader.LoadRunScene,
+                returnToStoryScene = _sceneLoader.LoadStoryScene,
+            };
+            _runnerRoot = new Root(runnerRootCtx);
+        }
+        _runnerRoot.InitializeRunnerRoot();
     }
 
 }

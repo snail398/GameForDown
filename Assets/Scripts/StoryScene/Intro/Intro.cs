@@ -11,6 +11,7 @@ namespace Story
             public PlayersData playersData;
             public Action startStory;
             public Action turnOnPC;
+            public bool needDelay;
         }
 
         private Ctx _ctx;
@@ -18,13 +19,21 @@ namespace Story
         public Intro(Ctx ctx)
         {
             _ctx = ctx;
+        }
+
+        public void SetCtx(Ctx ctx)
+        {
+            _ctx.needDelay = ctx.needDelay;
+            _ctx.turnOnPC = ctx.turnOnPC;
+        }
+        public void InitializeIntro()
+        {
             ConfigurateView();
             if (_ctx.playersData.CheckNewGameStatus())
                 _ctx.introView.StartCoroutinePrinting("Вы - молодой человек, странствующий по миру в поисках приключений.\nОднажды, изучая бескрайние просторы Арктики вы набрели на заброшенную лабораторию.\nТолько стоило Вам войти внутрь, как дверь за вами наглухо захлопнулась и вы оказались в небольшой пустой комнате. Единстенная вещь - это компьютер в центре комнаты.\nНе зная страха, вы включили его... \n\nНажмите на экран для продолжения ", 0.01f);
             else
                 _ctx.introView.HideIntroScreen();
         }
-
         private void ConfigurateView()
         {
             IntroView.Ctx viewCtx = new IntroView.Ctx
@@ -32,6 +41,8 @@ namespace Story
                 setIntroWatched = _ctx.playersData.SetGameAlreadyStarted,
                 startStory = _ctx.startStory,
                 turnOnPC = _ctx.turnOnPC,
+                needDelay = _ctx.needDelay,
+                SetDontNeedPcLoad = () =>_ctx.playersData.SetNeedPcLoading(0),
             };
             _ctx.introView.SetCtx(viewCtx);
         }
