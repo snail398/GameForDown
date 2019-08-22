@@ -22,6 +22,7 @@ namespace Assets.Scripts.Tutorial
             public GameEvent onTutorialFinish;
             public ReactiveProperty<int> blockSwipeCommand;
             public ReactiveCommand hideTutorialView;
+            public PlayersData playersData;
         }
 
         private const int StartPosY = 50;
@@ -59,7 +60,7 @@ namespace Assets.Scripts.Tutorial
         private void TutorialFinish()
         {
             _ctx.view.ShowText("Good Luck!");
-            PlayerPrefs.SetInt("tutorial_passed", 1);
+            _ctx.playersData.SetRunTutorialPassed();
             _ctx.onTutorialFinish?.Raise();
             _ctx.onTutorialFinished?.Invoke();
         }
@@ -95,12 +96,12 @@ namespace Assets.Scripts.Tutorial
             //step 2
             PoolManager.GetObject("LongWall", new Vector3(_ctx.positionFinder.PossiblePosList[_ctx.positionFinder.PossiblePosList.Count - 2], StartPosY+70, 0), Quaternion.identity);
             PoolManager.GetObject("LongWall", new Vector3(_ctx.positionFinder.PossiblePosList[_ctx.positionFinder.PossiblePosList.Count - 1], StartPosY+70, 0), Quaternion.identity);
-            PoolManager.GetObject("Wall", new Vector3(_ctx.positionFinder.PossiblePosList[1], StartPosY + 100, 0), Quaternion.identity);
+            PoolManager.GetObject("Wall", new Vector3(_ctx.positionFinder.PossiblePosList[2], StartPosY + 100, 0), Quaternion.identity);
             PoolManager.GetObject("Wall", new Vector3(_ctx.positionFinder.PossiblePosList[0], StartPosY + 100, 0), Quaternion.identity);
             //step 3
             for (int i = 0; i < posList.Count; i++)
             {
-                if (i == 2)
+                if (i == 1)
                 {
                     ColorObstacleController colorWall = PoolManager.GetObject("ColorWall", new Vector3(posList[i], StartPosY+140, 0), Quaternion.identity).GetComponent<ColorObstacleController>();
                     colorWall.SetColor(1);
@@ -111,7 +112,7 @@ namespace Assets.Scripts.Tutorial
             //step 4
             for (int i = 0; i < posList.Count; i++)
             {
-                if (i == 2)
+                if (i == 1)
                 {
                     ShapeObstacleController shapeWall = PoolManager.GetObject("ShapeWall", new Vector3(posList[i], StartPosY+210, 0), Quaternion.identity).GetComponent<ShapeObstacleController>();
                     shapeWall.SetMesh(1);

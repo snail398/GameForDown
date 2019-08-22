@@ -1,23 +1,24 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
 public class Scenes
 {
-    [MenuItem("Scnenes/Root Scene %1")]
+    [MenuItem("Scenes/Root Scene #z")]
     private static void OpenRootScene()
     {
-
+        EditorSceneManager.OpenScene(Application.dataPath + "/Scenes/RootScene.unity");
     }
 
-    [MenuItem("Scnenes/Story Scene %2")]
+    [MenuItem("Scenes/Story Scene #x")]
     private static void OpenStoryScene()
     {
-
+        EditorSceneManager.OpenScene(Application.dataPath + "/Scenes/Story.unity");
     }
 
-    [MenuItem("Scnenes/Run Scene %3")]
+    [MenuItem("Scenes/Run Scene #c")]
     private static void OpenRunScene()
     {
-
+        EditorSceneManager.OpenScene(Application.dataPath + "/Scenes/Main.unity");
     }
 }

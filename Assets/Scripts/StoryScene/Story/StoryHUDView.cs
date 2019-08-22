@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UniRx;
 
 namespace Story
 {
@@ -12,13 +13,15 @@ namespace Story
             public PlayersData playersData;
             public Action reloadGame;
             public Action loadRunScene;
+            public ReactiveProperty<bool> needStartRunButton;
         }
 
-        [SerializeField] private Text playersCoinsCountText;
-        [SerializeField] private Image notEnoughCoinsScreen;
-        [SerializeField] private IntVariable playersCoins;
-        [SerializeField] private int coinsToRun = 0;
-        [SerializeField] private Image computerScreen;
+        [SerializeField] private Text _playersCoinsCountText;
+        [SerializeField] private Image _notEnoughCoinsScreen;
+        [SerializeField] private IntVariable _playersCoins;
+        [SerializeField] private int _coinsToRun = 0;
+        [SerializeField] private Image _computerScreen;
+        [SerializeField] private Button _startRunButton;
 
         private Ctx _ctx;
         private Animator _animator;
@@ -26,21 +29,28 @@ namespace Story
 
         private void Awake()
         {
-            _animator = computerScreen.GetComponent<Animator>();
+            _animator = _computerScreen.GetComponent<Animator>();
+            _startRunButton.onClick.AddListener(StartRun);
         }
 
         public void SetCtx(Ctx ctx)
         {
             _ctx = ctx;
-            playersCoins.Value = _ctx.playersData.GetCoinsCount();
+            _playersCoins.Value = _ctx.playersData.GetCoinsCount();
             UpdateCoinsCount();
+            _ctx.needStartRunButton?.Subscribe(SetStartRunButtonStatus).AddTo(this);
+        }
+
+        public void SetStartRunButtonStatus(bool status)
+        {
+            _startRunButton.gameObject.SetActive(status);
         }
 
         public void SetPcOn()
         {
             if (_animator != null)
                 _animator.enabled = false;
-            computerScreen.color = new Color(0.2385f,0.23585f,0.23585f);
+            _computerScreen.color = new Color(0.2385f,0.23585f,0.23585f);
         }
 
         public void TurnOnPc()
@@ -54,10 +64,10 @@ namespace Story
 
         public void StartRun()
         {
-            if (CheckHasEnoughCoins(coinsToRun))
+            if (CheckHasEnoughCoins(_coinsToRun))
             {
                 _ctx.loadRunScene?.Invoke();
-                RemoveCoins(coinsToRun);
+                RemoveCoins(_coinsToRun);
                 SaveGame();
             }
         }
@@ -65,30 +75,30 @@ namespace Story
         public void WatchAds()
         {
             RemoveCoins(-10);
-            notEnoughCoinsScreen.gameObject.SetActive(false);
+            _notEnoughCoinsScreen.gameObject.SetActive(false);
         }
 
         private bool CheckHasEnoughCoins(int coinsRequired)
         {
-            if (coinsRequired <= playersCoins.Value) return true;
+            if (coinsRequired <= _playersCoins.Value) return true;
             else
             {
                 //show table for start run
-                notEnoughCoinsScreen.gameObject.SetActive(true);
+                _notEnoughCoinsScreen.gameObject.SetActive(true);
                 return false;
             }
         }
 
         private void RemoveCoins(int coinsToRemove)
         {
-            playersCoins.Value -= coinsToRemove;
+            _playersCoins.Value -= coinsToRemove;
             UpdateCoinsCount();
         }
 
         public void UpdateCoinsCount()
         {
-            if (playersCoinsCountText != null)
-                playersCoinsCountText.text = playersCoins.Value.ToString();
+            if (_playersCoinsCountText != null)
+                _playersCoinsCountText.text = _playersCoins.Value.ToString();
         }
         
         public void ChooseOption(int option)
@@ -108,12 +118,12 @@ namespace Story
 
         private void SaveGame()
         {
-            _ctx.playersData.SetCointCount(playersCoins.Value);
+            _ctx.playersData.SetCointCount(_playersCoins.Value);
         }
 
         public void RestartGame()
         {
-            playersCoins.Value = 0;
+            _playersCoins.Value = 0;
             _ctx.playersData.ClearData();
             _ctx.reloadGame?.Invoke();
         }

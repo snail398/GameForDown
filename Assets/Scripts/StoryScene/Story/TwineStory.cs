@@ -1,6 +1,7 @@
 ﻿using Cradle;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UniRx;
 using UnityEngine.UI;
 
 namespace Story
@@ -11,18 +12,27 @@ namespace Story
         {
             public TwineStoryView twineStoryView;
             public PlayersData playersData;
+            public ReactiveProperty<bool> needStartRunButton;
         }
 
         private readonly Ctx _ctx;
         private readonly List<StoryLink> _storyLinks = new List<StoryLink>();
         private Cradle.Story _story;
         private List<Button> _optionsButtons;
-        private readonly List<string> _varNameFromStory = new List<string>()
+        private readonly List<string> _varNameFromStory = new List<string>
         {
             "firstOption",
             "secondOption",
             "thirdOption"
         };
+        private readonly Dictionary<string, int> _passageWithoutRunButton = new Dictionary<string, int>
+        {
+            { "beemoIntroduce", 1 },
+            { "beemoStartTutorial", 2 },
+            { "beemoHahaMoney", 3 },
+            { "beemoMoney", 4 },
+        };
+        private string _fullPassageText;
 
         public TwineStory(Ctx ctx)
         {
@@ -42,16 +52,31 @@ namespace Story
 
         public void StartStory()
         {
-            
+            _ctx.twineStoryView.SubscribeScreenClick();
             _story.OnOutput += OnOutput;
             _story.OnPassageEnter += OnPassageEnter;
+            _story.OnPassageDone += OnPassageDone;
             foreach (Button button in _optionsButtons)
             {
                 button.gameObject.SetActive(false);
             }
-            if (_ctx.playersData.GetLastPassage() != "")
-                _story.StartPassage = _ctx.playersData.GetLastPassage();
+            string dataPassage = _ctx.playersData.GetLastPassage();
+            if (dataPassage == "beemoGoToRunTutorial" && !_ctx.playersData.CheckNeedRunTutorial())
+                dataPassage = "beemoTutorialEnd";
+            if (dataPassage != "")
+                if (TryFindPassage(dataPassage))
+                    _story.StartPassage = dataPassage;
             _story.Begin();
+        }
+
+        private void OnPassageDone(StoryPassage obj)
+        {
+            _ctx.twineStoryView.StartCoroutinePrinting(_fullPassageText, 0.1f);
+        }
+
+        private bool TryFindPassage(string dataPassage)
+        {
+            return _story.Passages.TryGetValue(dataPassage, out StoryPassage outPassage);
         }
 
         void OnOutput(StoryOutput output)
@@ -59,11 +84,11 @@ namespace Story
             if (output is StoryText)
             {
                 if (output.Text.Trim().Equals("")) return;
-                _ctx.twineStoryView.StartCoroutinePrinting(output.Text, 0.1f);
+                _fullPassageText += output.Text;
             }
             else if (output is LineBreak)
             {
-                _ctx.twineStoryView.MakeLineBreak();
+                _fullPassageText += "\n";
             }
             else if (output is StoryLink link)
             {
@@ -80,12 +105,27 @@ namespace Story
         
         public void OnPassageEnter(StoryPassage passage)
         {
+            CheckSpecificPassage(passage);
+            _fullPassageText = "";
             _ctx.playersData.SetLastPassage(passage.Name);
             _ctx.twineStoryView.CleanText();
             foreach (Button button in _optionsButtons)
             {
                 button.gameObject.SetActive(false);
             }
+        }
+
+        private void CheckSpecificPassage(StoryPassage passage)
+        {
+            /*
+             * Проверка, нужно ли отображать кнопку
+             * "Добыть монеты" для перехода в раннер
+             * В ранних пассажах её необходимо скрывать
+             */
+            if ( _passageWithoutRunButton.TryGetValue(passage.Name, out _))
+                _ctx.needStartRunButton?.SetValueAndForceNotify(false);
+            else
+                _ctx.needStartRunButton?.SetValueAndForceNotify(true);
         }
 
         private void SetOptionButton()

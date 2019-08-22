@@ -51,4 +51,14 @@ public class PlayersData
     {
         PlayerPrefs.SetInt("need_pc_load", value);
     }
+
+    public bool CheckNeedRunTutorial()
+    {
+        return PlayerPrefs.GetInt("tutorial_passed").Equals(0);
+    }
+
+    public void SetRunTutorialPassed()
+    {
+        PlayerPrefs.SetInt("tutorial_passed", 1);
+    }
 }

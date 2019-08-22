@@ -16,6 +16,7 @@ namespace Assets.Scripts
         {
             public Action restartScene;
             public Action returnToStoryScene;
+            public PlayersData playerData;
         }
         private RootView _rootView;
         private Ctx _ctx;
@@ -82,14 +83,15 @@ namespace Assets.Scripts
                     CreateObstacleGenerator();
                     CreateCoinGenerator();
                 },
-                view = UnityEngine.Object.Instantiate(_rootView.TutorialPrefab, Vector3.zero,Quaternion.identity),
-                positionFinder =  _positionFinder,
+                view = UnityEngine.Object.Instantiate(_rootView.TutorialPrefab, Vector3.zero, Quaternion.identity),
+                positionFinder = _positionFinder,
                 stepSuccesful = _rootView.StepSuccesful,
                 onTutorialFinish = _rootView.OnTutorialFinish,
                 onTutorialStart = _rootView.OnTutorialStart,
                 SlowDowner = _rootView.SlowDowner,
                 blockSwipeCommand = _blockSwipeCommand,
                 hideTutorialView = _hideTutorialView,
+                playersData = _ctx.playerData,
             };
            _tutorial = new TutorialController(tutorialCtx);
         }
@@ -179,8 +181,7 @@ namespace Assets.Scripts
 
         private bool CheckTutorial()
         {
-            //   return true;
-            return PlayerPrefs.GetInt("tutorial_passed").Equals(0);
+            return _ctx.playerData.CheckNeedRunTutorial();
         }
 
         public void GameRefresh()

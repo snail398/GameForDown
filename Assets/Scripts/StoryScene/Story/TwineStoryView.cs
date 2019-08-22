@@ -13,23 +13,18 @@ namespace Story
             public Action setOptionsButton;
         }
 
-        [SerializeField] private Cradle.Story story;
-        [SerializeField] private List<Button> optionsButtons;
-        [SerializeField] private Text storyText;
+        [SerializeField] private Cradle.Story _story;
+        [SerializeField] private List<Button> _optionsButtons;
+        [SerializeField] private Text _storyText;
+        [SerializeField] private Button _screenButton;
 
         private Ctx _ctx;
 
         public bool skip = false;
 
-        public Cradle.Story CradleStory
-        {
-            get => story;
-        }
+        public Cradle.Story CradleStory => _story;
 
-        public List<Button> OptionsButtons
-        {
-            get => optionsButtons;
-        }
+        public List<Button> OptionsButtons => _optionsButtons;
 
         public void SetCtx(Ctx ctx)
         {
@@ -38,20 +33,27 @@ namespace Story
 
         void Awake()
         {
-            storyText.text = "";
-            foreach (Button button in optionsButtons)
+            _storyText.text = "";
+            foreach (Button button in _optionsButtons)
             {
                 button.gameObject.SetActive(false);
             }
         }
                
+        public void SubscribeScreenClick()
+        {
+            _screenButton.onClick.AddListener(SkipText);
+        }
+
         public void RefreshSkip()
         {
             skip = false;
         }
+
         public void SkipText()
         {
-            skip = true;
+            if (_storyText.text != "")
+                skip = true;
         }
 
         public void StartCoroutinePrinting(string input, float delay)
@@ -61,12 +63,12 @@ namespace Story
 
         public void MakeLineBreak()
         {
-            storyText.text += "\n";
+            _storyText.text += "\n";
         }
 
         public void CleanText()
         {
-            storyText.text = "";
+            _storyText.text = "";
         }
 
         IEnumerator TextPrint(string input, float delay)
@@ -74,8 +76,8 @@ namespace Story
             //вывод текста побуквенно
             for (int i = 0; i <= input.Length; i++)
             {
-                if (skip) { storyText.text = input; break; }
-                storyText.text = input.Substring(0, i);
+                if (skip) { _storyText.text = input; break; }
+                _storyText.text = input.Substring(0, i);
                 yield return new WaitForSeconds(delay);
             }
             _ctx.setOptionsButton?.Invoke();

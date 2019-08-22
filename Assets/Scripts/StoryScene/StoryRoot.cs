@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UniRx;
 
 namespace Story
 {
@@ -11,6 +12,7 @@ namespace Story
             public PlayersData playersData;
             public Action reloadGame;
             public Action loadRunScene;
+            public Action<Transform> setCanvas;
         }
 
         private readonly Ctx _ctx;
@@ -18,6 +20,7 @@ namespace Story
         private TwineStory _twineStory;
         private StoryHUD _storyHUD;
         private Intro _intro;
+        private readonly ReactiveProperty<bool> _needStartRunButton = new ReactiveProperty<bool>(false);
 
         public StoryRoot(Ctx ctx)
         {
@@ -27,6 +30,7 @@ namespace Story
         public void Initialize()
         {
             _rootView = GameObject.Find("StoryRoot").GetComponent<StoryRootView>();
+            _ctx.setCanvas?.Invoke(GameObject.Find("Canvas").transform);
             CreateTwineStory();
             CreateHUD();
             CreateIntro();
@@ -59,6 +63,7 @@ namespace Story
                 {
                     twineStoryView = _rootView.GetComponent<TwineStoryView>(),
                     playersData = _ctx.playersData,
+                    needStartRunButton = _needStartRunButton,
                 };
                 _twineStory = new TwineStory(twineCtx);
             }
@@ -76,6 +81,7 @@ namespace Story
                     twineStory = _twineStory,
                     loadRunScene = _ctx.loadRunScene,
                     reloadGame = _ctx.reloadGame,
+                    needStartRunButton = _needStartRunButton,
                 };
                 _storyHUD = new StoryHUD(hudCtx);
             }

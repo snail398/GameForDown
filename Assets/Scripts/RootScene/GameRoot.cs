@@ -5,19 +5,28 @@ using Assets.Scripts;
 
 public class GameRoot : MonoBehaviour
 {
+    [SerializeField] LoadingScreenView loadingScreenView;
     private AnaliticsCore _analiticsCore;
     private PlayersData _playersData;
     private SceneLoader _sceneLoader;
     private StoryRoot _storyRoot;
     private Root _runnerRoot;
+    private LoadingScreen _loadingScreen;
 
     private void Awake()
     {
+        LoadingScreen.Ctx loadCtx = new LoadingScreen.Ctx
+        {
+            view = loadingScreenView,
+        };
+        _loadingScreen = new LoadingScreen(loadCtx);
         //Create SceneLoader object
         SceneLoader.Ctx loaderCtx = new SceneLoader.Ctx
         {
             onStorySceneLoaded = OnSceneLoaded,
             onRunSceneLoaded = OnRunSceneLoaded,
+            hideLoadingScreen = _loadingScreen.HideLoadingScreen,
+            showLoadingScreen = _loadingScreen.ShowLoadingScreen,
         };
         _sceneLoader = new SceneLoader(loaderCtx);
         //Load Story Scene
@@ -42,6 +51,7 @@ public class GameRoot : MonoBehaviour
                 analiticsCore = _analiticsCore,
                 reloadGame = _sceneLoader.ReloadGame,
                 loadRunScene = _sceneLoader.LoadRunScene,
+                setCanvas = _loadingScreen.SetCanvas,
             };
             _storyRoot = new StoryRoot(storyCtx);
         }
@@ -57,6 +67,7 @@ public class GameRoot : MonoBehaviour
             {
                 restartScene = _sceneLoader.LoadRunScene,
                 returnToStoryScene = _sceneLoader.LoadStoryScene,
+                playerData = _playersData,
             };
             _runnerRoot = new Root(runnerRootCtx);
         }

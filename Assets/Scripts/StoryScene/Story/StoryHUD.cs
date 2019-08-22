@@ -1,4 +1,5 @@
 ﻿using System;
+using UniRx;
 
 namespace Story
 {
@@ -11,6 +12,7 @@ namespace Story
             public TwineStory twineStory;
             public Action reloadGame;
             public Action loadRunScene;
+            public ReactiveProperty<bool> needStartRunButton;
         }
 
         private Ctx _ctx;
@@ -28,6 +30,7 @@ namespace Story
                 twineStory = _ctx.twineStory,
                 loadRunScene = _ctx.loadRunScene,
                 reloadGame = _ctx.reloadGame,
+                needStartRunButton = _ctx.needStartRunButton,
             };
             _ctx.storyHUDView.SetCtx(viewCtx);
             if (!_ctx.playersData.CheckNeedPcLoading())

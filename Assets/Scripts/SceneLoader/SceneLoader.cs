@@ -9,6 +9,8 @@ public class SceneLoader
     {
         public Action onStorySceneLoaded;
         public Action onRunSceneLoaded;
+        public Action showLoadingScreen;
+        public Action hideLoadingScreen;
     }
 
     private Ctx _ctx;
@@ -40,12 +42,14 @@ public class SceneLoader
     public void LoadRunScene()
     {
         _asyncSceneLoad = SceneManager.LoadSceneAsync(2);
+        _ctx.showLoadingScreen?.Invoke();
         _asyncSceneLoad.completed += OnRunSceneLoaded;
     }
 
     private void OnRunSceneLoaded(AsyncOperation op)
     {
         _ctx.onRunSceneLoaded?.Invoke();
+        _ctx.hideLoadingScreen?.Invoke();
         _asyncSceneLoad.completed -= OnRunSceneLoaded;
     }
 }
