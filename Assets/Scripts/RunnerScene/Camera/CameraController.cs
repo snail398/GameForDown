@@ -18,18 +18,16 @@ namespace Assets.Scripts.Camera
         public void SetHero(Transform heroTransform)
         {
             _heroPosition = heroTransform;
+            /*
+            if (_heroPosition != null)
+                SetCameraPosition();
+                */
         }
 
         private void SetCameraPosition()
         {
-            transform.position = _heroPosition.position + _offsetFromHero;
+            _cameraRig.position = _heroPosition.position + _offsetFromHero;
             transform.LookAt(_target, Vector3.back);
-        }
-
-        void Update()
-        {
-            if (_heroPosition != null)
-                SetCameraPosition();
         }
     }
 }

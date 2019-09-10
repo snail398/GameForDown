@@ -17,6 +17,7 @@ namespace Assets.Scripts
             public Action restartScene;
             public Action returnToStoryScene;
             public PlayersData playerData;
+            public AnaliticsCore analitics;
         }
         private RootView _rootView;
         private Ctx _ctx;
@@ -49,8 +50,19 @@ namespace Assets.Scripts
             CreatePositionFinder();
             CreateGameSpeedController();
             CreateScoreContainer();
+            InitHUD();
             // _rootView.GetComponent<PoolSetup>().onPoolReady.Subscribe(_ => OnPoolReady()).AddTo(_rootView);
             OnPoolReady();
+        }
+
+        private void InitHUD()
+        {
+            HUDController.Ctx hudCtx = new HUDController.Ctx
+            {
+                playersData = _ctx.playerData,
+                analitics = _ctx.analitics,
+            };
+            _rootView.HUD.SetCtx(hudCtx);
         }
 
         public void OnPoolReady()
@@ -92,6 +104,7 @@ namespace Assets.Scripts
                 blockSwipeCommand = _blockSwipeCommand,
                 hideTutorialView = _hideTutorialView,
                 playersData = _ctx.playerData,
+                analitics = _ctx.analitics,
             };
            _tutorial = new TutorialController(tutorialCtx);
         }
@@ -103,8 +116,10 @@ namespace Assets.Scripts
                 score = _rootView.Score,
                 maxScore = _rootView.MaxScore,
                 parent = _rootView.gameObject,
+                playerData = _ctx.playerData,
             };
             _scoreContainer = new ScoreContainer(scoreCtx);
+            _rootView.OnHeroDeath += _scoreContainer.OnHeroDeath;
         }
 
         private void CreateGameSpeedController()
@@ -146,32 +161,26 @@ namespace Assets.Scripts
         private void CreateHero()
         {
             HeroView view = UnityEngine.Object.Instantiate(_rootView.HeroPrefab, Vector2.zero, Quaternion.identity);
-            if (_mainHero == null)
+            Hero.Ctx heroCtx = new Hero.Ctx
             {
-                Hero.Ctx heroCtx = new Hero.Ctx
-                {
-                    lineCount = _rootView.LevelConfig.LineCount,
-                    maxHeath = 3,
-                    currentHealth = 3,
-                    view = view,
-                    availableColors = _rootView.LevelConfig.AvailableColors,
-                    availableMeshes = _rootView.LevelConfig.AvailableMeshes,
-                    lineWidth = _rootView.LevelConfig.LineWidth,
-                    continueGame = _rootView.GameSpeed.ContinueGame,
-                    blockSwipeCommand = _blockSwipeCommand,
-                    hideTutorialView = _hideTutorialView,
-                    restartScene = _ctx.restartScene,
-                    returnToStoryScene = _ctx.returnToStoryScene,
+                lineCount = _rootView.LevelConfig.LineCount,
+                maxHeath = 3,
+                currentHealth = 3,
+                view = view,
+                availableColors = _rootView.LevelConfig.AvailableColors,
+                availableMeshes = _rootView.LevelConfig.AvailableMeshes,
+                lineWidth = _rootView.LevelConfig.LineWidth,
+                continueGame = _rootView.GameSpeed.ContinueGame,
+                blockSwipeCommand = _blockSwipeCommand,
+                hideTutorialView = _hideTutorialView,
+                restartScene = _ctx.restartScene,
+                returnToStoryScene = _ctx.returnToStoryScene,
+                isPaused = () => _rootView.Paused,
+                stopRun = _rootView.GameSpeed.SlowDownGame,
                 };
-                _mainHero = new Hero(heroCtx);
-            }
+            _mainHero = new Hero(heroCtx);
             _mainHero.InitializeHero();
             ConfigCamera(view.transform);
-        }
-
-        public void OnHeroHeath()
-        {
-            _scoreContainer.OnHeroDeath();
         }
 
         private void ConfigCamera(Transform hero)

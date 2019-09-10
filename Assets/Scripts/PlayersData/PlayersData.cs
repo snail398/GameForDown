@@ -61,4 +61,52 @@ public class PlayersData
     {
         PlayerPrefs.SetInt("tutorial_passed", 1);
     }
+
+    public string GetLastDateTime()
+    {
+        return PlayerPrefs.GetString("last_date_time");
+    }
+
+    public int GetLastChargeCount()
+    {
+        return PlayerPrefs.GetInt("last_charge_count");
+    }
+
+    public void SetLastChargeCount(uint count)
+    {
+        PlayerPrefs.SetInt("last_charge_count", (int)count);
+    }
+
+    public void SetLastChargeDate()
+    {
+        PlayerPrefs.SetString("last_date_time", System.DateTime.UtcNow.ToString());
+    }
+
+    public string GetLastChargeDate()
+    {
+        return PlayerPrefs.GetString("last_date_time");
+    }
+
+    public void ClearLastChargeDate()
+    {
+        PlayerPrefs.DeleteKey("last_date_time");
+    }
+
+    public int GetMaxScore()
+    {
+        return PlayerPrefs.GetInt("max_score");
+    }
+    public void SetMaxScore(int score)
+    {
+        PlayerPrefs.SetInt("max_score", score);
+    }
+
+    public void SetCommonMoneyCount(int count)
+    {
+        PlayerPrefs.SetInt("common_money_count", GetCommonMoneyCount() + count);
+    }
+    public int GetCommonMoneyCount()
+    {
+        return PlayerPrefs.GetInt("common_money_count", 0);
+    }
 }

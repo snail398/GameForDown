@@ -22,6 +22,8 @@ namespace Assets.Scripts.HeroFolder
             public ReactiveCommand hideTutorialView;
             public Action restartScene;
             public Action returnToStoryScene;
+            public Func<bool> isPaused;
+            public Action stopRun;
         }
 
         private readonly Ctx _ctx;
@@ -49,12 +51,14 @@ namespace Assets.Scripts.HeroFolder
                 continueGame = _ctx.continueGame,
                 blockSwipeCommand = _ctx.blockSwipeCommand,
                 hideTutorialView = _ctx.hideTutorialView,
+                isPaused = _ctx.isPaused,
             };
             _ctx.view.SetCtx(heroViewCtx);
             HeroDeathView.Ctx deathViewCtx = new HeroDeathView.Ctx
             {
                 restartScene = _ctx.restartScene,
                 returnToStoryScene = _ctx.returnToStoryScene,
+                stopRun = _ctx.stopRun,
             };
             _ctx.view.GetComponent<HeroDeathView>().SetCtx(deathViewCtx);
         }

@@ -13,6 +13,8 @@ namespace Story
             public Action reloadGame;
             public Action loadRunScene;
             public Action<Transform> setCanvas;
+            public AnaliticsCore analitics;
+            public IAPCore iapCore;
         }
 
         private readonly Ctx _ctx;
@@ -30,6 +32,7 @@ namespace Story
         public void Initialize()
         {
             _rootView = GameObject.Find("StoryRoot").GetComponent<StoryRootView>();
+            _rootView.OnDestroyEvent += Dispose;
             _ctx.setCanvas?.Invoke(GameObject.Find("Canvas").transform);
             CreateTwineStory();
             CreateHUD();
@@ -64,6 +67,7 @@ namespace Story
                     twineStoryView = _rootView.GetComponent<TwineStoryView>(),
                     playersData = _ctx.playersData,
                     needStartRunButton = _needStartRunButton,
+                    analitics = _ctx.analitics,
                 };
                 _twineStory = new TwineStory(twineCtx);
             }
@@ -82,10 +86,17 @@ namespace Story
                     loadRunScene = _ctx.loadRunScene,
                     reloadGame = _ctx.reloadGame,
                     needStartRunButton = _needStartRunButton,
+                    analitics = _ctx.analitics,
+                    iapCore = _ctx.iapCore,
                 };
                 _storyHUD = new StoryHUD(hudCtx);
             }
             _storyHUD.InitializeHUD();
+        }
+
+        private void Dispose()
+        {
+            _storyHUD.Dispose();
         }
     }
 }

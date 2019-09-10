@@ -12,12 +12,13 @@ public class GameRoot : MonoBehaviour
     private StoryRoot _storyRoot;
     private Root _runnerRoot;
     private LoadingScreen _loadingScreen;
+    private IAPCore _iapCore;
 
     private void Awake()
     {
         LoadingScreen.Ctx loadCtx = new LoadingScreen.Ctx
         {
-            view = loadingScreenView,
+            prefabView = loadingScreenView,
         };
         _loadingScreen = new LoadingScreen(loadCtx);
         //Create SceneLoader object
@@ -37,6 +38,8 @@ public class GameRoot : MonoBehaviour
 
         //Create PlayerData object
         _playersData = new PlayersData();
+
+        _iapCore = new IAPCore();
     }
 
     private void OnSceneLoaded()
@@ -52,6 +55,8 @@ public class GameRoot : MonoBehaviour
                 reloadGame = _sceneLoader.ReloadGame,
                 loadRunScene = _sceneLoader.LoadRunScene,
                 setCanvas = _loadingScreen.SetCanvas,
+                analitics = _analiticsCore,
+                iapCore = _iapCore,
             };
             _storyRoot = new StoryRoot(storyCtx);
         }
@@ -68,6 +73,7 @@ public class GameRoot : MonoBehaviour
                 restartScene = _sceneLoader.LoadRunScene,
                 returnToStoryScene = _sceneLoader.LoadStoryScene,
                 playerData = _playersData,
+                analitics = _analiticsCore,
             };
             _runnerRoot = new Root(runnerRootCtx);
         }

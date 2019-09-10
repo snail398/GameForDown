@@ -9,12 +9,20 @@ namespace Assets.Scripts.Tutorial
     {
         [SerializeField] private Image arrow;
         [SerializeField] private Text text;
+        [SerializeField] private Image panel;
+        [SerializeField] private Image changeColor;
+        [SerializeField] private Image changeShape;
 
         private float time;
         private bool horizontal;
         private IDisposable _timerDisposable;
         private IDisposable _arrowDisposable;
+        private Vector2 _defaultPanelSize;
 
+        private void Awake()
+        {
+            _defaultPanelSize = panel.rectTransform.sizeDelta;
+        }
         public void ShowArrow(string direction)
         {
             _arrowDisposable?.Dispose();
@@ -51,8 +59,27 @@ namespace Assets.Scripts.Tutorial
             arrow.enabled = false;
         }
 
+        public void ShowChangeColor()
+        {
+            changeColor.gameObject.SetActive(true);
+            panel.rectTransform.sizeDelta += new Vector2(0, 75);
+        }
+
+        public void ShowChangeShape()
+        {
+            changeShape.gameObject.SetActive(true);
+            panel.rectTransform.sizeDelta += new Vector2(0, 75);
+        }
+
+        public void ShowGoodLuck()
+        {
+            panel.rectTransform.sizeDelta -= new Vector2(100, 0);
+        }
+
         public void ShowText(string message)
         {
+            panel.rectTransform.sizeDelta = _defaultPanelSize;
+            panel.gameObject.SetActive(true);
             text.enabled = true;
             text.text = message;
             _timerDisposable?.Dispose();
@@ -62,7 +89,12 @@ namespace Assets.Scripts.Tutorial
 
         public void HideText()
         {
+            panel.gameObject.SetActive(false);
             text.enabled = false;
+            if (changeColor.gameObject.activeSelf)
+                changeColor.gameObject.SetActive(false);
+            if (changeShape.gameObject.activeSelf)
+                changeShape.gameObject.SetActive(false);
         }
 
         void Update()

@@ -4,7 +4,7 @@ namespace Assets.Scripts.Coins
 {
     public class Rotator : MonoBehaviour
     {
-        void Update()
+        void FixedUpdate()
         {
             transform.Rotate(transform.forward,5);
         }

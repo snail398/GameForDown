@@ -13,11 +13,13 @@ namespace Story
             public TwineStoryView twineStoryView;
             public PlayersData playersData;
             public ReactiveProperty<bool> needStartRunButton;
+            public AnaliticsCore analitics;
         }
 
         private readonly Ctx _ctx;
         private readonly List<StoryLink> _storyLinks = new List<StoryLink>();
         private Cradle.Story _story;
+        private StoryPassage _printedPassage;
         private List<Button> _optionsButtons;
         private readonly List<string> _varNameFromStory = new List<string>
         {
@@ -69,9 +71,13 @@ namespace Story
             _story.Begin();
         }
 
-        private void OnPassageDone(StoryPassage obj)
+        private void OnPassageDone(StoryPassage passage)
         {
-            _ctx.twineStoryView.StartCoroutinePrinting(_fullPassageText, 0.1f);
+            if (_printedPassage != passage)
+            {
+                _printedPassage = passage;
+                _ctx.twineStoryView.StartCoroutinePrinting(_fullPassageText, 0.05f);
+            }
         }
 
         private bool TryFindPassage(string dataPassage)
@@ -117,6 +123,8 @@ namespace Story
 
         private void CheckSpecificPassage(StoryPassage passage)
         {
+            if (passage.Name == "beemoGoToRunTutorial")
+                _ctx.analitics.SendStoryTutorialPassed();
             /*
              * Проверка, нужно ли отображать кнопку
              * "Добыть монеты" для перехода в раннер

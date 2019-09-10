@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UniRx;
+using System;
 
 namespace Assets.Scripts.Score
 {
@@ -10,15 +11,18 @@ namespace Assets.Scripts.Score
             public IntVariable score;
             public IntVariable maxScore;
             public GameObject parent;
+            public PlayersData playerData;
         }
 
         private readonly Ctx _ctx;
+        private IDisposable _tickHandler;
 
         public ScoreContainer(Ctx ctx)
         {
             _ctx = ctx;
             _ctx.score.Value = 0;
-            Observable.EveryUpdate()
+            _ctx.maxScore.Value = _ctx.playerData.GetMaxScore();
+            _tickHandler = Observable.EveryFixedUpdate()
                 .Subscribe(_ => Tick())
                 .AddTo(_ctx.parent);
         }
@@ -35,7 +39,12 @@ namespace Assets.Scripts.Score
 
         public void OnHeroDeath()
         {
-            if (CheckNewRecord()) _ctx.maxScore.Value = _ctx.score.Value;
+            _tickHandler?.Dispose();
+            if (CheckNewRecord())
+            {
+                _ctx.maxScore.Value = _ctx.score.Value;
+                _ctx.playerData.SetMaxScore(_ctx.maxScore.Value);
+            }
         }
     }
 }

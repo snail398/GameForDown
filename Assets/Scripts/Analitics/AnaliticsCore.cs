@@ -41,4 +41,40 @@ public class AnaliticsCore
         FirebaseAnalytics.SetSessionTimeoutDuration(new TimeSpan(0, 30, 0));
         _firebaseInitialized = true;
     }
+
+    public void SendRunTutorialPassed()
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent("run_tutorial_passed");
+    }
+
+    public void SendStoryTutorialPassed()
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent("story_tutorial_passed");
+    }
+
+    public void SendCurrentPassage(string passage)
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent(passage);
+    }
+
+    public void SendRunTime(TimeSpan runTimeSpan)
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent("run_time", "seconds", runTimeSpan.TotalSeconds);
+    }
+
+    public void SendCurrentMoneyCount(int count)
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent("current_money_count", "cur_count",count);
+    }
+
+    public void SendCommonMoneyCount(int count)
+    {
+        if (_firebaseInitialized)
+            FirebaseAnalytics.LogEvent("common_money_count", "com_count", count);
+    }
 }

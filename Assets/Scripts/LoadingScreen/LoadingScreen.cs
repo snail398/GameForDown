@@ -6,11 +6,12 @@ public class LoadingScreen
 {  
     public struct Ctx
     {
-        public LoadingScreenView view;
+        public LoadingScreenView prefabView;
     }
 
     private Ctx _ctx;
     private Transform _canvas;
+    private LoadingScreenView _view;
     public LoadingScreen(Ctx ctx)
     {
         _ctx = ctx;
@@ -20,19 +21,19 @@ public class LoadingScreen
     public void SetCanvas(Transform canvas)
     {
         _canvas = canvas;
+        _view = Object.Instantiate(_ctx.prefabView, _canvas);
     }
 
     public void ShowLoadingScreen()
     {
         if (_canvas != null)
         {
-            _ctx.view = Object.Instantiate(_ctx.view, _canvas);
-            _ctx.view.ShowLoaingScreen();
+            _view.ShowLoaingScreen();
         }
     }
 
     public void HideLoadingScreen()
     {
-        _ctx.view.HideLoadingScreen();
+        _view.HideLoadingScreen();
     }
 }

@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Tutorial
 {
-    public class TutorialController : MonoBehaviour
+    public class TutorialController
     {
         public struct Ctx
         {
@@ -23,6 +23,7 @@ namespace Assets.Scripts.Tutorial
             public ReactiveProperty<int> blockSwipeCommand;
             public ReactiveCommand hideTutorialView;
             public PlayersData playersData;
+            public AnaliticsCore analitics;
         }
 
         private const int StartPosY = 50;
@@ -60,7 +61,9 @@ namespace Assets.Scripts.Tutorial
         private void TutorialFinish()
         {
             _ctx.view.ShowText("Good Luck!");
+            _ctx.view.ShowGoodLuck();
             _ctx.playersData.SetRunTutorialPassed();
+            _ctx.analitics.SendRunTutorialPassed();
             _ctx.onTutorialFinish?.Raise();
             _ctx.onTutorialFinished?.Invoke();
         }
@@ -70,6 +73,7 @@ namespace Assets.Scripts.Tutorial
             _tutorialStep++;
             if (_tutorialStep > Steps)
             {
+                _ctx.view.ShowGoodLuck();
                 TutorialFinish();
             }
             else
@@ -82,7 +86,7 @@ namespace Assets.Scripts.Tutorial
         {
            // currentInst = Instantiate(_ctx.stepSuccesful, Vector3.zero, Quaternion.identity);
 
-            currentSlowDowner = Instantiate(_ctx.SlowDowner, Vector3.zero, Quaternion.identity);
+            currentSlowDowner = UnityEngine.Object.Instantiate(_ctx.SlowDowner, Vector3.zero, Quaternion.identity);
             currentSlowDowner.GetComponent<StepSuccesful>().stepComplite.Subscribe(_ => NextStep()).AddTo(_ctx.view);
 
             PoolManager.GetObject("LongWall", new Vector3(_ctx.positionFinder.PossiblePosList[0], 20, 0), Quaternion.identity);
@@ -139,13 +143,13 @@ namespace Assets.Scripts.Tutorial
             switch (_tutorialStep)
             {
                 case 0:
-                    currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], StartPosY , 0));
+                    currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], StartPosY + 4, 0));
                     break;
                 case 1:
                     _ctx.blockSwipeCommand.SetValueAndForceNotify(4);
                     _ctx.view.ShowArrow("left");
                     _ctx.view.ShowText("Swipe left");
-                    currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], StartPosY+18, 0));
+                    currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], StartPosY + 21, 0));
                     break;
                 case 2:
                     _ctx.blockSwipeCommand.SetValueAndForceNotify(2);
@@ -157,11 +161,13 @@ namespace Assets.Scripts.Tutorial
                     _ctx.blockSwipeCommand.SetValueAndForceNotify(3);
                     _ctx.view.ShowArrow("down");
                     _ctx.view.ShowText("Swipe down for change color");
+                    _ctx.view.ShowChangeColor();
                     currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], 45, 0));
                     break;
                 case 4:
                     _ctx.blockSwipeCommand.SetValueAndForceNotify(1);
                     _ctx.view.ShowText("Swipe up for change shape");
+                    _ctx.view.ShowChangeShape();
                     _ctx.view.ShowArrow("up");
                     currentSlowDowner.SetPosition(new Vector3(_ctx.positionFinder.PossiblePosList[1], 70, 0));
                     break;

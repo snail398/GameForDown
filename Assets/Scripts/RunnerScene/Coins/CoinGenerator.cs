@@ -32,7 +32,7 @@ namespace Assets.Scripts.Coins
             float pos = _ctx.positionFinder.PossiblePosList[Random.Range(0, _ctx.positionFinder.PossiblePosList.Count)];
             for (int i = 0; i < 4; i++)
             {
-                PoolManager.GetObject("Coin", new Vector3(pos, StartPosY + 10 + i*6, 0), Quaternion.identity);
+                PoolManager.GetObject("Coin", new Vector3(pos, StartPosY + 10 + i*6, -0.2f), Quaternion.identity);
             }
         }
     }

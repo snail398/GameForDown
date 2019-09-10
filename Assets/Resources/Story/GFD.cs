@@ -27,11 +27,15 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 			VarDef("firstOption", () => this.@firstOption, val => this.@firstOption = val);
 			VarDef("secondOption", () => this.@secondOption, val => this.@secondOption = val);
 			VarDef("thirdOption", () => this.@thirdOption, val => this.@thirdOption = val);
+			VarDef("havePortableConcentrator", () => this.@havePortableConcentrator, val => this.@havePortableConcentrator = val);
+			VarDef("hungry", () => this.@hungry, val => this.@hungry = val);
 		}
 
 		public StoryVar @firstOption;
 		public StoryVar @secondOption;
 		public StoryVar @thirdOption;
+		public StoryVar @havePortableConcentrator;
+		public StoryVar @hungry;
 	}
 
 	public new VarDefs Vars
@@ -63,6 +67,20 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 		passage5_Init();
 		passage6_Init();
 		passage7_Init();
+		passage8_Init();
+		passage9_Init();
+		passage10_Init();
+		passage11_Init();
+		passage12_Init();
+		passage13_Init();
+		passage14_Init();
+		passage15_Init();
+		passage16_Init();
+		passage17_Init();
+		passage18_Init();
+		passage19_Init();
+		passage20_Init();
+		passage21_Init();
 	}
 
 	// ---------------
@@ -78,11 +96,11 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage1_Main()
 	{
-		yield return text("Привет, путешественник! ");
+		yield return text("\tПривет, путешественник! ");
 		yield return lineBreak();
-		yield return text("Надеюсь для тебя уже стало очевидно, что ты заперт на этой поляне. Для того, чтоб" +
-		    "ы выбраться, тебе придётся пройти мою игру. Сейчас расскажу как мной пользоватьс" +
-		    "я.");
+		yield return text("\tНадеюсь, для тебя уже стало очевидно, что ты заперт на этой поляне. Для того что" +
+		    "бы выбраться, тебе придётся пройти мою игру. Сейчас расскажу, как мной пользоват" +
+		    "ься.");
 		yield return lineBreak();
 		yield return link("Начать обучение", "beemoStartTutorial", null);
 		yield return text("\t");
@@ -106,8 +124,9 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage2_Main()
 	{
-		yield return text("Я расскажу тебе историю, но её исход зависит только от тебя. Ты можешь делать выб" +
-		    "ор, нажимая на кнопки, которые появляются под экраном. Попробуй нажать.");
+		yield return text("\tЯ расскажу тебе историю, но исход зависит только от тебя. Ты можешь делать выбор" +
+		    ", нажимая на кнопки, которые появляются под экраном. Попробуй нажать на одну из " +
+		    "трёх кнопок.");
 		yield return lineBreak();
 		yield return link("Попробовать", "beemoMoney", null);
 		yield return text("\t");
@@ -136,8 +155,8 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage3_Main()
 	{
-		yield return text("В дальнейшем, чтоб сделать выбор, тебе необходимо будет платить монетами. Их коли" +
-		    "чество отображается в верхней части моего экрана.");
+		yield return text("\tВ дальнейшем, чтобы сделать выбор, тебе необходимо будет платить монетами. Их ко" +
+		    "личество отображается в верхней части моего экрана.");
 		yield return lineBreak();
 		yield return link("Понятно", "beemoGoToRunTutorial", null);
 		yield return text("\t");
@@ -161,14 +180,14 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage4_Main()
 	{
-		yield return text("Ха-ха-ха! ");
+		yield return text("\tХа-ха-ха! ");
 		yield return lineBreak();
-		yield return text("Ты и правда думал, что я так просто тебя отпущу? ");
+		yield return text("\tТы и правда думал, что я так просто тебя отпущу? ");
 		yield return lineBreak();
-		yield return text("Забудем про твою попытку побега и вернемся к обучению. ");
+		yield return text("\tЗабудем про твою попытку побега и вернемся к обучению. ");
 		yield return lineBreak();
-		yield return text("В дальнейшем, чтоб сделать выбор, тебе необходимо будет платить монетами. Их коли" +
-		    "чество отображается в верхней части моего экрана.");
+		yield return text("\tВ дальнейшем, чтоб сделать выбор, тебе необходимо будет платить монетами. Их кол" +
+		    "ичество отображается в верхней части моего экрана.");
 		yield return lineBreak();
 		yield return link("Понятно", "beemoGoToRunTutorial", null);
 		yield return text("\t");
@@ -192,9 +211,9 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage5_Main()
 	{
-		yield return text("Заработать их ты сможешь, потратив самое дорогое, что у тебя есть!");
+		yield return text("\tЗаработать их ты сможешь, потратив самое дорогое, что у тебя есть!");
 		yield return lineBreak();
-		yield return text("Нажимай на кнопку \"Добыть монеты\" и я покажу, как это делать");
+		yield return text("\tНажимай на кнопку в виде монеты, и я покажу, как это делать.");
 		yield return lineBreak();
 		Vars.firstOption = 0;
 		yield return lineBreak();
@@ -215,9 +234,9 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 	IStoryThread passage6_Main()
 	{
-		yield return text("Итак, ты готов и мы начинаем!");
+		yield return text("\tИтак, ты готов и мы начинаем!");
 		yield return lineBreak();
-		yield return link("Начать", "storyStart", null);
+		yield return link("Начать", "Episod1", null);
 		yield return text("\t");
 		yield return lineBreak();
 		Vars.firstOption = 0;
@@ -230,16 +249,458 @@ public partial class @GFD: Cradle.StoryFormats.Harlowe.HarloweStory
 
 
 	// .............
-	// #7: storyStart
+	// #7: Episod1
 
 	void passage7_Init()
 	{
-		this.Passages[@"storyStart"] = new StoryPassage(@"storyStart", new string[]{  }, passage7_Main);
+		this.Passages[@"Episod1"] = new StoryPassage(@"Episod1", new string[]{  }, passage7_Main);
 	}
 
 	IStoryThread passage7_Main()
 	{
-		yield return text("Double-click this passage to edit it.");
+		yield return text("\tДля нашей героини день начался ужасно. Вместо желанного сна до полудня, Алекс пр" +
+		    "оснулась в восемь утра из-за шума за окном.");
+		yield return lineBreak();
+		yield return text("\t- Ненавижу этот новый район - подумала она на долю секунды.");
+		yield return lineBreak();
+		yield return text(@"	Когда Алекс немного пришла в себя после столь внезапного пробуждения, в голове опять появилась мысль, которая тревожила её уже несколько месяцев: ""Зачем я подписалась на этот школьный проект? Проводила бы лето, как другие ребята: гуляла, загорала, общалась... Ах! Было бы с кем пообщаться.");
+		yield return lineBreak();
+		yield return text("\tКак бы то ни было, пора вставать\".");
+		yield return lineBreak();
+		yield return link("Подойти к окну", "NoiseExplaining", null);
+		yield return lineBreak();
+		yield return link("Проверить стенд с проектом", "MorningExperimentCheck", null);
+		yield return lineBreak();
+		yield return link("Пойти умываться", "GoToBath", null);
+		yield return lineBreak();
+		Vars.firstOption = 100;
+		yield return lineBreak();
+		Vars.secondOption = 50;
+		yield return lineBreak();
+		Vars.thirdOption = 20;
+		yield break;
+	}
+
+
+	// .............
+	// #8: NoiseExplaining
+
+	void passage8_Init()
+	{
+		this.Passages[@"NoiseExplaining"] = new StoryPassage(@"NoiseExplaining", new string[]{  }, passage8_Main);
+	}
+
+	IStoryThread passage8_Main()
+	{
+		yield return text(@"	Алекс подошла к окну и, как и ожидала, увидела стройку напротив своих окон. Возводили новый жилой дом. Несколько человек с помощью экзокостюмов-концентраторов ловко поднимали бетонные блоки и ставили их один на другой так, будто они весили не больше, чем пушинка.");
+		yield return lineBreak();
+		yield return text("\tВсе благодаря технологии концентраторов, позволяющей собирать природную энергию " +
+		    "и использовать её почти в любых целях. В данном случае, например, для перемещени" +
+		    "я тяжелых объектов.");
+		yield return lineBreak();
+		yield return text("\t- Обожаю высокие технологии - восхитилась Алекс.");
+		yield return lineBreak();
+		yield return text("\tОни с семьей переехали в новый район три месяца назад. Так как друзей у Алекс ещ" +
+		    "ё не было, а родители почти все время проводили на работе, она нашла для себя ра" +
+		    "звлечение в  прогулках по бурно развивающемуся району и наблюдением за строителя" +
+		    "ми.");
+		yield return lineBreak();
+		yield return link("Проверить эксперимент", "MorningExperimentCheck", null);
+		yield return lineBreak();
+		yield return link("Пойти умываться", "GoToBath", null);
+		yield return lineBreak();
+		Vars.firstOption = 50;
+		yield return lineBreak();
+		Vars.secondOption = 20;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #9: MorningExperimentCheck
+
+	void passage9_Init()
+	{
+		this.Passages[@"MorningExperimentCheck"] = new StoryPassage(@"MorningExperimentCheck", new string[]{  }, passage9_Main);
+	}
+
+	IStoryThread passage9_Main()
+	{
+		yield return text("\tКак и ожидалось, за ночь проект сам не сделался, что с унынием отметила Алекс.");
+		yield return lineBreak();
+		yield return text("\tГероиня окинула стенд взглядом: он остался в том же состоянии, в котором и был о" +
+		    "ставлен вчера вечером.");
+		yield return lineBreak();
+		yield return text(@"	Сам стенд представляет собой сферическую колбу, к которой подключено множество разнообразных датчиков. Он предназначен для извлечения природной энергии из окружающего мира и концентрации её внутри колбы. Примерно таким способом люди смогли подчинить себе природную энергию давным давно.");
+		yield return lineBreak();
+		yield return link("Пойти умываться", "GoToBath", null);
+		yield return lineBreak();
+		Vars.firstOption = 20;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #10: GoToBath
+
+	void passage10_Init()
+	{
+		this.Passages[@"GoToBath"] = new StoryPassage(@"GoToBath", new string[]{  }, passage10_Main);
+	}
+
+	IStoryThread passage10_Main()
+	{
+		yield return text("\tЗайдя в ванну героиня поняла, что забыла надеть свой портативный концентратор из" +
+		    "-за столь спонтанного пробуждения.");
+		yield return lineBreak();
+		yield return text("\t- Ну вот! С утра всё наперекосяк - подумала Алекс. - Ладно умоюсь по старинке, в" +
+		    "ручную.");
+		yield return lineBreak();
+		yield return link("Позавтракать", "TakeBreakfast", null);
+		yield return lineBreak();
+		yield return link("Одеть концентратор", "EquipConcentrator", null);
+		yield return lineBreak();
+		Vars.firstOption = 50;
+		yield return lineBreak();
+		Vars.secondOption = 100;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #11: TakeBreakfast
+
+	void passage11_Init()
+	{
+		this.Passages[@"TakeBreakfast"] = new StoryPassage(@"TakeBreakfast", new string[]{  }, passage11_Main);
+	}
+
+	IStoryThread passage11_Main()
+	{
+		yield return text("\tКогда наша героиня зашла на кухню, перед ней встал самый тяжёлый выбор в  жизни:" +
+		    " \"Чего бы скушать на завтрак?\" ");
+		yield return lineBreak();
+		yield return text("\tВпрочем этот вопрос вставал перед ней каждое утро.");
+		yield return lineBreak();
+		yield return link("Съесть тост с чаем", "ToastWithTea", null);
+		yield return lineBreak();
+		yield return link("Приготовить шашлык", "BarbequeOnKitchen", null);
+		yield return lineBreak();
+		if(Vars.havePortableConcentrator==true) {
+			yield return text(" ");
+		yield return link("Съесть кашку яичко и йогурт", "FullBreakfast", null);
+		}
+		yield return lineBreak();
+		Vars.firstOption = 50;
+		yield return lineBreak();
+		Vars.secondOption = 50;
+		yield return lineBreak();
+		Vars.thirdOption = 50;
+		yield break;
+	}
+
+
+	// .............
+	// #12: EquipConcentrator
+
+	void passage12_Init()
+	{
+		this.Passages[@"EquipConcentrator"] = new StoryPassage(@"EquipConcentrator", new string[]{  }, passage12_Main);
+	}
+
+	IStoryThread passage12_Main()
+	{
+		yield return text("\tАлекс вернулась в свою комнату и взяла со стола свой портативный концентратор. ");
+		yield return lineBreak();
+		yield return text(@"	В неактивированном состоянии портативный концентратор выглядит как обычный браслет. Как только пользователь одевает его, он трансформируется в изящную перчатку и позволяет манипулировать небольшими объемами природной энергии. Такого устройства хватает для выполнения повседневных задач.");
+		yield return lineBreak();
+		yield return link("Позавтракать", "TakeBreakfast", null);
+		yield return lineBreak();
+		Vars.firstOption = 20;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield return lineBreak();
+		Vars.havePortableConcentrator = true;
+		yield break;
+	}
+
+
+	// .............
+	// #13: ToastWithTea
+
+	void passage13_Init()
+	{
+		this.Passages[@"ToastWithTea"] = new StoryPassage(@"ToastWithTea", new string[]{  }, passage13_Main);
+	}
+
+	IStoryThread passage13_Main()
+	{
+		yield return text("\tБутерброд с колбаской был очень вкусным и закончился очень быстро.");
+		yield return lineBreak();
+		yield return text("\t- Для затравка пойдёт - подумала Алекса - а через часик ещё перекушу.");
+		yield return lineBreak();
+		yield return text("\tТак сильно наша героиня не ошибалась со времён своей первой влюблённости...");
+		yield return lineBreak();
+		yield return link("Приступить к проекту", "GoToProject", null);
+		yield return lineBreak();
+		Vars.hungry = true;
+		yield return lineBreak();
+		Vars.firstOption = 75;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #14: FullBreakfast
+
+	void passage14_Init()
+	{
+		this.Passages[@"FullBreakfast"] = new StoryPassage(@"FullBreakfast", new string[]{  }, passage14_Main);
+	}
+
+	IStoryThread passage14_Main()
+	{
+		yield return text("\tЗакинув в рот последнюю ложку йогурта, Алекс откинулась на спинку дивана и подум" +
+		    "ала:");
+		yield return lineBreak();
+		yield return text("\t- Сто лет не завтракала так плотно! Теперь смогу быть активной до самого вечера!" +
+		    "");
+		yield return lineBreak();
+		yield return link("Приступить к проекту", "GoToProject", null);
+		yield return lineBreak();
+		Vars.hungry = false;
+		yield return lineBreak();
+		Vars.firstOption = 75;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #15: BarbequeOnKitchen
+
+	void passage15_Init()
+	{
+		this.Passages[@"BarbequeOnKitchen"] = new StoryPassage(@"BarbequeOnKitchen", new string[]{  }, passage15_Main);
+	}
+
+	IStoryThread passage15_Main()
+	{
+		yield return text("\tИдея жаренного на костре мяса так понравилась Алекс с утра, что она сразу присту" +
+		    "пила к её воплощению. Разломала кухонные табуретки, затем подожгла их и стала жд" +
+		    "ать. К сожалению, огонь не понял желаний главной героини и вскоре охватил весь д" +
+		    "ом. ");
+		yield return lineBreak();
+		yield return text("\tАлекс погибла в адских муках.");
+		yield return lineBreak();
+		yield return link("Начать с начала", "Episod1", null);
+		yield return lineBreak();
+		Vars.firstOption = 0;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #16: GoToProject
+
+	void passage16_Init()
+	{
+		this.Passages[@"GoToProject"] = new StoryPassage(@"GoToProject", new string[]{  }, passage16_Main);
+	}
+
+	IStoryThread passage16_Main()
+	{
+		yield return text("\tКогда наша героиня пришла в комнату, где установлен стенд, на неё сразу навалило" +
+		    "сь уныние. Она проводит этот эксперимент по наблюдению за концентрированной прир" +
+		    "одной энергией уже в сорок второй раз и никаких новых результатов она не получал" +
+		    "а уже давно.");
+		yield return lineBreak();
+		yield return text(@"	Сам эксперимент заключается в сборе природной энергии с помощью стенда, и наблюдении за её поведением, как визуально, так и с помощью датчиков. Сбор производится автоматически специальным энергонасосом. Далеко ходить не надо, так как природная энергия существует повсеместно, фактически вселенная состоит из неё.");
+		yield return lineBreak();
+		yield return text("\tА вот процесс наблюдения обычно весьма скучен, но в этом и суть системы образова" +
+		    "ния - быть послушным терпилой.");
+		yield return lineBreak();
+		yield return link("Начать эксперимент", "ExperimentStart", null);
+		yield return lineBreak();
+		Vars.firstOption = 50;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #17: ExperimentStart
+
+	void passage17_Init()
+	{
+		this.Passages[@"ExperimentStart"] = new StoryPassage(@"ExperimentStart", new string[]{  }, passage17_Main);
+	}
+
+	IStoryThread passage17_Main()
+	{
+		yield return text("\tЭксперимент продолжался уже три часа...");
+		yield return lineBreak();
+		yield return text("\tОранжевый шарик энергии медленно вращался внутри корпуса стенда, но ничего необы" +
+		    "чного не происходило.");
+		yield return lineBreak();
+		yield return text("\tУныние Алекс сменилось на раздражение, а потом и на злость.");
+		yield return lineBreak();
+		yield return text("\tАлекс захлестнуло чувство ненависти ко всему вокруг: к эксперименту, к себе и ко" +
+		    " всему миру.");
+		yield return lineBreak();
+		yield return link("Попытаться ускорить процесс", "Forcing", null);
+		yield return lineBreak();
+		yield return link("Бросить всё", "Stopping", null);
+		yield return lineBreak();
+		Vars.firstOption = 150;
+		yield return lineBreak();
+		Vars.secondOption = 60;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #18: Forcing
+
+	void passage18_Init()
+	{
+		this.Passages[@"Forcing"] = new StoryPassage(@"Forcing", new string[]{  }, passage18_Main);
+	}
+
+	IStoryThread passage18_Main()
+	{
+		yield return text("\tАлекс раздраженно вскочила со стула и на глаза ей попался мобильный телефон. Мыс" +
+		    "ль не заставила себя долго ждать и она тут же поместила его в колбу с природной " +
+		    "энергией.");
+		yield return lineBreak();
+		yield return text("\tНеожиданно раздался громкий звук, похожий на щебет тысячи птиц, а за ним последо" +
+		    "вал огромный по мощности взрыв, который стёр весь район, а вместе с ним и нашу г" +
+		    "ероиню.");
+		yield return lineBreak();
+		yield return link("Начать с начала", "Episod1", null);
+		yield return lineBreak();
+		Vars.firstOption = 0;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #19: Stopping
+
+	void passage19_Init()
+	{
+		this.Passages[@"Stopping"] = new StoryPassage(@"Stopping", new string[]{  }, passage19_Main);
+	}
+
+	IStoryThread passage19_Main()
+	{
+		yield return text("\tАлекс вылетела из комнаты, плюнув на все меры предосторожности, связанные с эксп" +
+		    "ериментом. Она совсем забыла о новом шкафу, который поставили её родители в кори" +
+		    "доре, и стукнулась мизинцем об его угол.");
+		yield return lineBreak();
+		yield return text("\tВ этот момент её терпение лопнуло. Алекс начала проклинать всё на свете:");
+		yield return lineBreak();
+		yield return text("\t- Ненавижу эту новую квартиру!");
+		yield return lineBreak();
+		yield return text("\t- Ненавижу чёртову школу!");
+		yield return lineBreak();
+		yield return text("\t- Ненавижу чёртов эксперимент! Да зачем вообще мы подчинили эту энергию?");
+		yield return lineBreak();
+		yield return link("Далее", "Episode1End", null);
+		yield return lineBreak();
+		Vars.firstOption = 0;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #20: Episode1End
+
+	void passage20_Init()
+	{
+		this.Passages[@"Episode1End"] = new StoryPassage(@"Episode1End", new string[]{  }, passage20_Main);
+	}
+
+	IStoryThread passage20_Main()
+	{
+		yield return text("\tЧасто бывает в жизни, что мы задаём в пустоту миллион интересующий нас вопросов:" +
+		    " \"Кто мы? Зачем мы родились? Когда всё это закончится?\" - и никогда не получаем " +
+		    "на них ответов.");
+		yield return lineBreak();
+		yield return text("\tНо иногда вселенная обращает на это внимание и даёт нам ответы, но весьма изощре" +
+		    "нными способами.");
+		yield return lineBreak();
+		yield return text("\tТак и случилось с нашей героиней. Природная энергия, сконцентрированная в экспер" +
+		    "иментальном стенде вошла в резонанс с чрезвычайно сильными негативными эмоциями " +
+		    "Алекс и отправила её туда, где она сможет получить свои ответы.");
+		yield return lineBreak();
+		yield return text("\tВнезапно квартира вокруг Алекс стала буквально растворяться в воздухе и вокруг н" +
+		    "ачал вырисовываться лес.");
+		yield return lineBreak();
+		yield return text("\tА через мгновение сознание покинуло Алекс...");
+		yield return lineBreak();
+		yield return text("\t");
+		yield return link("Следующая глава", "Episode2", null);
+		yield return lineBreak();
+		Vars.firstOption = 500;
+		yield return lineBreak();
+		Vars.secondOption = 0;
+		yield return lineBreak();
+		Vars.thirdOption = 0;
+		yield break;
+	}
+
+
+	// .............
+	// #21: Episode2
+
+	void passage21_Init()
+	{
+		this.Passages[@"Episode2"] = new StoryPassage(@"Episode2", new string[]{  }, passage21_Main);
+	}
+
+	IStoryThread passage21_Main()
+	{
+		yield return text("Продолжение следует...");
+		yield return lineBreak();
+		yield return lineBreak();
+		yield return text("Ожидайте обновлений от разработчика.");
+		yield return lineBreak();
+		yield return text("Присылайте обратную связь на адрес lololo398@yandex.ru");
 		yield break;
 	}
 

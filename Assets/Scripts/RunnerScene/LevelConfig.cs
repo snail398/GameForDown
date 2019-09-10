@@ -19,17 +19,17 @@ namespace Assets.Scripts
         [SerializeField] private List<String> _wallPrefabNames;
         [SerializeField] private int _lineWidth = 2;
 
-        public int LineCount { get => _lineCount; set => _lineCount = value; }
-        public int SpawnTime { get => _spawnTime; set => _spawnTime = value; }
-        public float SpeedIncreaseTime { get => _speedIncreaseTime; set => _speedIncreaseTime = value; }
-        public float SpeedIncreaseCount { get => _speedIncreaseCount; set => _speedIncreaseCount = value; }
-        public float StartGameSpeed { get => _startGameSpeed; set => _startGameSpeed = value; }
-        public List<Color> AvailableColors { get => _availableColors; set => _availableColors = value; }
-        public List<Mesh> AvailableMeshes { get => _availableMeshes; set => _availableMeshes = value; }
-        public List<Mesh> ObstacleMeshes { get => _obstacleMeshes; set => _obstacleMeshes = value; }
-        public List<MeshesAccordance> MeshesAccordances { get => _meshesAccordances; set => _meshesAccordances = value; }
-        public List<String> WallPrefabNames { get => _wallPrefabNames; set => _wallPrefabNames = value; }
-        public int LineWidth { get => _lineWidth; set => _lineWidth = value; }
+        public int LineCount => _lineCount;
+        public int SpawnTime => _spawnTime;
+        public float SpeedIncreaseTime => _speedIncreaseTime;
+        public float SpeedIncreaseCount => _speedIncreaseCount;
+        public float StartGameSpeed => _startGameSpeed;
+        public List<Color> AvailableColors => _availableColors;
+        public List<Mesh> AvailableMeshes => _availableMeshes;
+        public List<Mesh> ObstacleMeshes => _obstacleMeshes;
+        public List<MeshesAccordance> MeshesAccordances => _meshesAccordances;
+        public List<String> WallPrefabNames => _wallPrefabNames;
+        public int LineWidth => _lineWidth;
 
     }
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 namespace Story
 {
@@ -8,5 +8,12 @@ namespace Story
         [SerializeField] private IntroView introView;
 
         public IntroView IntroView => introView;
+
+        public event Action OnDestroyEvent;
+
+        private void OnDestroy()
+        {
+            OnDestroyEvent?.Invoke();
+        }
     }
 }

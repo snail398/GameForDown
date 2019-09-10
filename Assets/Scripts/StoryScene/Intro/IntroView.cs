@@ -21,7 +21,8 @@ namespace Story
 
         private Image _introScreen;
         private Ctx _ctx;
-        void Awake()
+
+        private void Awake()
         {
             introText.text = "";
             _introScreen = GetComponent<Image>();
@@ -30,6 +31,7 @@ namespace Story
         public void SetCtx(Ctx ctx)
         {
             _ctx = ctx;
+            gameObject.SetActive(true);
         }
 
         public void StartCoroutinePrinting(string input, float delay)

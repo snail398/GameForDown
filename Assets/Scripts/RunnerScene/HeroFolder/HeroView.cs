@@ -22,6 +22,7 @@ namespace Assets.Scripts.HeroFolder
             public Action continueGame;
             public ReactiveProperty<int> blockSwipeCommand;
             public ReactiveCommand hideTutorialView;
+            public Func<bool> isPaused;
         }
 
         private Ctx _ctx;
@@ -48,7 +49,7 @@ namespace Assets.Scripts.HeroFolder
         }
         public void MoveLeft()
         {
-            if (CanMoveLeft())
+            if (CanMoveLeft() && !_ctx.isPaused.Invoke())
             {
                 _newPos = new Vector2(_newPos.x - _ctx.strafe, transform.position.y);
                 _ctx.continueGame?.Invoke();
@@ -59,7 +60,7 @@ namespace Assets.Scripts.HeroFolder
 
         public void MoveRight()
         {
-            if (CanMoveRight())
+            if (CanMoveRight() && !_ctx.isPaused.Invoke())
             {
                 _newPos = new Vector2(_newPos.x + _ctx.strafe, transform.position.y);
                 _ctx.continueGame?.Invoke();

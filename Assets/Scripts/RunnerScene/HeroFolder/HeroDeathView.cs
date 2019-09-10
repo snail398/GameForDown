@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
+using UniRx;
 using System;
 
 namespace Assets.Scripts.HeroFolder
@@ -10,8 +10,10 @@ namespace Assets.Scripts.HeroFolder
         {
             public Action restartScene;
             public Action returnToStoryScene;
+            public Action stopRun;
         }
 
+        [SerializeField] private ParticleSystem _explosion;
         private Ctx _ctx;
         private bool _isTutorial = false;
 
@@ -33,7 +35,11 @@ namespace Assets.Scripts.HeroFolder
             }
             else
             {
-                SetSceneToStory();
+                _explosion.Play();
+                GetComponent<MeshRenderer>().enabled = false;
+                GetComponent<Collider>().enabled = false;
+                _ctx.stopRun?.Invoke();
+                Observable.Timer(TimeSpan.FromSeconds(2)).Subscribe(_ => SetSceneToStory()).AddTo(this);
             }
         }
 

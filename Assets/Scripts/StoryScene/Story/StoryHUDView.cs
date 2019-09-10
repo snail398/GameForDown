@@ -9,10 +9,8 @@ namespace Story
     {
         public struct Ctx
         {
-            public TwineStory twineStory;
             public PlayersData playersData;
             public Action reloadGame;
-            public Action loadRunScene;
             public ReactiveProperty<bool> needStartRunButton;
         }
 
@@ -20,17 +18,57 @@ namespace Story
         [SerializeField] private Image _notEnoughCoinsScreen;
         [SerializeField] private IntVariable _playersCoins;
         [SerializeField] private int _coinsToRun = 0;
-        [SerializeField] private Image _computerScreen;
+        [SerializeField] private Image _computerScreenWrapper;
+        [SerializeField] private Image _reallyComputerScreen;
+        [SerializeField] private Image _coinScreen;
         [SerializeField] private Button _startRunButton;
+        [SerializeField] private BatteryView _batteryView;
 
         private Ctx _ctx;
-        private Animator _animator;
+        private Animator _screenAnimator;
 
+        private Animator _notEnoughCoinsAnimator;
+        private CanvasGroup _notEnoughCoinsCanvasGroup;
+
+        public event Action OnClickRunButton;
+        public event Action<int> OnChooseOption;
+        public event Action OnShowAds;
+
+        public BatteryView BatteryView => _batteryView;
+        public IntVariable PlayersCoins => _playersCoins;
 
         private void Awake()
         {
-            _animator = _computerScreen.GetComponent<Animator>();
+            ResizePC();
+            _screenAnimator = _computerScreenWrapper.GetComponent<Animator>();
             _startRunButton.onClick.AddListener(StartRun);
+            _notEnoughCoinsAnimator = _notEnoughCoinsScreen.GetComponentInChildren<Animator>();
+            _notEnoughCoinsCanvasGroup = _notEnoughCoinsScreen.GetComponent<CanvasGroup>();
+
+            _notEnoughCoinsCanvasGroup.alpha = 0;
+            _notEnoughCoinsCanvasGroup.blocksRaycasts = false;
+        }
+
+        private void ResizePC()
+        {
+            switch (Screen.height / Screen.width)
+            {
+                case 1920 / 1080:
+                    SetScreenOffset(45f, 6.5f);
+                    break;
+                case 2160 / 1080:
+                    SetScreenOffset(55f, 8f);
+                    break;
+            }
+        }
+
+        private void SetScreenOffset(float top, float bottom)
+        {
+            RectTransform chargeContainer = _batteryView.GetComponent<RectTransform>();
+            _reallyComputerScreen.rectTransform.offsetMax = new Vector2(_reallyComputerScreen.rectTransform.offsetMax.x, -top);
+            _reallyComputerScreen.rectTransform.offsetMin = new Vector2(_reallyComputerScreen.rectTransform.offsetMin.x, bottom);
+            _coinScreen.rectTransform.sizeDelta = new Vector2(_coinScreen.rectTransform.sizeDelta.x, top);
+            chargeContainer.sizeDelta = new Vector2(chargeContainer.sizeDelta.x, top);
         }
 
         public void SetCtx(Ctx ctx)
@@ -48,51 +86,44 @@ namespace Story
 
         public void SetPcOn()
         {
-            if (_animator != null)
-                _animator.enabled = false;
-            _computerScreen.color = new Color(0.2385f,0.23585f,0.23585f);
+            if (_screenAnimator != null)
+                _screenAnimator.enabled = false;
+            _computerScreenWrapper.color = Color.white;
+            _coinScreen.GetComponent<CanvasGroup>().alpha = 1;
+            _batteryView.SetChargeVisible();
         }
 
         public void TurnOnPc()
         {
-            if (_animator != null)
+            if (_screenAnimator != null)
             {
-                _animator.enabled = true;
-                _animator.SetTrigger("PcTurnOn");
+                _screenAnimator.enabled = true;
+                _screenAnimator.SetTrigger("PcTurnOn");
             }
         }
 
         public void StartRun()
         {
-            if (CheckHasEnoughCoins(_coinsToRun))
-            {
-                _ctx.loadRunScene?.Invoke();
-                RemoveCoins(_coinsToRun);
-                SaveGame();
-            }
+            OnClickRunButton?.Invoke();
         }
+
 
         public void WatchAds()
         {
-            RemoveCoins(-10);
-            _notEnoughCoinsScreen.gameObject.SetActive(false);
+            OnShowAds?.Invoke();
+        }
+        
+        public void ShowNotEnoughCoinsScreen()
+        {
+            _notEnoughCoinsAnimator.SetTrigger("ShowPanel");
+            _notEnoughCoinsCanvasGroup.alpha = 1;
+            _notEnoughCoinsCanvasGroup.blocksRaycasts = true;
         }
 
-        private bool CheckHasEnoughCoins(int coinsRequired)
+        public void HideNotEnoughCoinsScreen()
         {
-            if (coinsRequired <= _playersCoins.Value) return true;
-            else
-            {
-                //show table for start run
-                _notEnoughCoinsScreen.gameObject.SetActive(true);
-                return false;
-            }
-        }
-
-        private void RemoveCoins(int coinsToRemove)
-        {
-            _playersCoins.Value -= coinsToRemove;
-            UpdateCoinsCount();
+            _notEnoughCoinsAnimator.SetTrigger("HidePanel");
+            _notEnoughCoinsCanvasGroup.blocksRaycasts = false;
         }
 
         public void UpdateCoinsCount()
@@ -103,12 +134,7 @@ namespace Story
         
         public void ChooseOption(int option)
         {
-            int coinsToOption = _ctx.twineStory.GetCoinsForOption(option);
-            if (CheckHasEnoughCoins(coinsToOption))
-            {
-                _ctx.twineStory.MakeChoice(option);
-                RemoveCoins(coinsToOption);
-            }
+            OnChooseOption?.Invoke(option);
         }
 
         void OnApplicationQuit()
