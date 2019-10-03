@@ -1,4 +1,5 @@
 ﻿using Cradle;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UniRx;
@@ -35,6 +36,11 @@ namespace Story
             { "beemoMoney", 4 },
         };
         private string _fullPassageText;
+        private const string DEATH_PASSAGE = "deathPassage";
+        private string _toSavePassageName;
+        private PassageHistory _passageHistory;
+
+        public event Action ShowRollbackWindow;
 
         public TwineStory(Ctx ctx)
         {
@@ -50,6 +56,11 @@ namespace Story
                 setOptionsButton = SetOptionButton,
             };
             _ctx.twineStoryView.SetCtx(viewCtx);
+            PassageHistory.Ctx passageHistoryCtx = new PassageHistory.Ctx
+            {
+                playersData = _ctx.playersData,
+            };
+            _passageHistory = new PassageHistory(passageHistoryCtx);
         }
 
         public void StartStory()
@@ -62,13 +73,36 @@ namespace Story
             {
                 button.gameObject.SetActive(false);
             }
-            string dataPassage = _ctx.playersData.GetLastPassage();
-            if (dataPassage == "beemoGoToRunTutorial" && !_ctx.playersData.CheckNeedRunTutorial())
-                dataPassage = "beemoTutorialEnd";
-            if (dataPassage != "")
-                if (TryFindPassage(dataPassage))
-                    _story.StartPassage = dataPassage;
+            string dataPassage = _passageHistory.GetLastPassage();
+            if (TryFindPassage(dataPassage))
+                _story.StartPassage = dataPassage;
+            if (_passageHistory.StoryVars != null)
+                SetVarsFromDict(_passageHistory.StoryVars);
             _story.Begin();
+        }
+
+        private Dictionary<string,string> UpdateVarsDictionary()
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            foreach (var item in _story.Vars)
+            {
+                string val = item.Value.InnerValue == null ? "null" : item.Value.InnerValue.ToString();
+                dict.Add(item.Key,val);
+            }
+            return dict;
+        }
+
+        private void SetVarsFromDict(Dictionary<string, string> dict)
+        {
+            foreach (var item in dict)
+            {
+                if (item.Value.ToLower() == "true")
+                    _story.Vars.SetMember(item.Key, true);
+                else if (item.Value.ToLower() == "false")
+                    _story.Vars.SetMember(item.Key, false);
+                else
+                    _story.Vars.SetMember(item.Key, item.Value);
+            }
         }
 
         private void OnPassageDone(StoryPassage passage)
@@ -77,6 +111,7 @@ namespace Story
             {
                 _printedPassage = passage;
                 _ctx.twineStoryView.StartCoroutinePrinting(_fullPassageText, 0.05f);
+                _passageHistory.StoryVars = UpdateVarsDictionary();
             }
         }
 
@@ -104,16 +139,42 @@ namespace Story
 
         public void MakeChoice(int choice)
         {
+            if (_story.Vars[DEATH_PASSAGE] == true)
+            {
+                _toSavePassageName = _optionsButtons[choice].GetComponentInChildren<Text>().text;
+                ShowRollbackWindow?.Invoke();
+            }
+            else
+            {
+                _ctx.twineStoryView.RefreshSkip();
+                _storyLinks.Clear();
+                _story.DoLink(_optionsButtons[choice].GetComponentInChildren<Text>().text);
+            }
+        }
+
+        public void RollBack()
+        {
             _ctx.twineStoryView.RefreshSkip();
             _storyLinks.Clear();
-            _story.DoLink(_optionsButtons[choice].GetComponentInChildren<Text>().text);
+            _story.Vars[DEATH_PASSAGE] = false;
+            if (_passageHistory.TryGetPreviousPassage(out string name))
+                _story.GoTo(name);
+        }
+
+        public void ToSave()
+        {
+            _ctx.twineStoryView.RefreshSkip();
+            _storyLinks.Clear();
+            _story.Vars[DEATH_PASSAGE] = false;
+            _story.DoLink(_toSavePassageName);
         }
         
         public void OnPassageEnter(StoryPassage passage)
         {
+            _ctx.analitics.SendCurrentPassage(passage.Name);
             CheckSpecificPassage(passage);
             _fullPassageText = "";
-            _ctx.playersData.SetLastPassage(passage.Name);
+            _passageHistory.AddToHistory(passage.Name);
             _ctx.twineStoryView.CleanText();
             foreach (Button button in _optionsButtons)
             {

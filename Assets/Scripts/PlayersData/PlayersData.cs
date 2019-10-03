@@ -29,7 +29,8 @@ public class PlayersData
 
     public int GetCoinsCount()
     {
-        return PlayerPrefs.GetInt("coins_count");
+        //       return PlayerPrefs.GetInt("coins_count");
+        return 1000;
     }
 
     public void SetCointCount(int coins)
@@ -108,5 +109,24 @@ public class PlayersData
     public int GetCommonMoneyCount()
     {
         return PlayerPrefs.GetInt("common_money_count", 0);
+    }
+
+    public void SetPreviousPassage(string previousPassage)
+    {
+        PlayerPrefs.SetString("previous_passage", previousPassage);
+    }
+    public string GetPreviousPassage()
+    {
+        return PlayerPrefs.GetString("previous_passage");
+    }
+
+    public void SetStoryVars(string vars)
+    {
+        PlayerPrefs.SetString("story_vars", vars);
+    }
+
+    public string GetStoryVars()
+    {
+        return PlayerPrefs.GetString("story_vars");
     }
 }

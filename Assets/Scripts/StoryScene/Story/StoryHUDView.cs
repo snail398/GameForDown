@@ -23,6 +23,7 @@ namespace Story
         [SerializeField] private Image _coinScreen;
         [SerializeField] private Button _startRunButton;
         [SerializeField] private BatteryView _batteryView;
+        [SerializeField] private Image _rollbackWindow;
 
         private Ctx _ctx;
         private Animator _screenAnimator;
@@ -31,6 +32,8 @@ namespace Story
         private CanvasGroup _notEnoughCoinsCanvasGroup;
 
         public event Action OnClickRunButton;
+        public event Action OnClickRollbackButton;
+        public event Action OnClickToSaveButton;
         public event Action<int> OnChooseOption;
         public event Action OnShowAds;
 
@@ -60,6 +63,26 @@ namespace Story
                     SetScreenOffset(55f, 8f);
                     break;
             }
+        }
+
+        public void ShowRollbackWindow()
+        {
+            _rollbackWindow.gameObject.SetActive(true);
+        }
+
+        public void HideRollbackWindow()
+        {
+            _rollbackWindow.gameObject.SetActive(false);
+        }
+
+        public void ClickRollbackButton()
+        {
+            OnClickRollbackButton?.Invoke();
+        }
+
+        public void ClickToSaveButton()
+        {
+            OnClickToSaveButton?.Invoke();
         }
 
         private void SetScreenOffset(float top, float bottom)
